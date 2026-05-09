@@ -89,7 +89,7 @@
               "faq",
               "troubleshooting",
               "support",
-              "changelog"
+              "release-notes"
             ]
           }
         ]
@@ -133,7 +133,7 @@
         "items": [
           { "label": "Email support", "href": "mailto:hello@trailercast.io" },
           { "label": "Status page", "href": "https://status.trailercast.io" },
-          { "label": "Changelog", "href": "/changelog" }
+          { "label": "What's new", "href": "/release-notes" }
         ]
       }
     ]
