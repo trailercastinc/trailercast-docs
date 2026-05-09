@@ -1,0 +1,101 @@
+---
+title: "Reports & analytics"
+description: "Top demos, by-user breakdowns, and a chronological activity feed."
+icon: "chart-line"
+---
+
+The **Reports** phase has three tabs:
+
+<Tabs>
+  <Tab title="Top Demos">
+    Ranked by engagement (views × completion × rewatches). Click any row to open the demo.
+
+    Useful for:
+    - Identifying your team's hits, what cuts work?
+    - Finding under-shared demos with high engagement (someone made gold but only sent it to one person)
+    - Coaching: "watch this trailer, see how it opens?"
+  </Tab>
+
+  <Tab title="By User">
+    Per-rep breakdown:
+    - Demos created
+    - Total views generated
+    - Avg engagement per demo
+    - Won / lost / pending deals (when CRM integration is connected)
+
+    Sortable by every column. Personal scope (just you) vs Team scope (everyone) toggle at the top.
+  </Tab>
+
+  <Tab title="Activity">
+    Chronological feed of every play, share, comment, follow-up across the team. Useful for:
+    - Daily standup: "what happened with prospects yesterday?"
+    - Audit trail of recent activity
+    - Spotting when a stalled deal re-engages
+  </Tab>
+</Tabs>
+
+## Personal vs Team scope
+
+The toggle at the top of the Reports phase switches between:
+
+| Scope | What you see |
+|---|---|
+| **Personal** | Just your demos and your prospects |
+| **Team** | Everyone's demos and prospects |
+
+Team scope is gated to **Admin and Global Admin**. Members see Personal-only.
+
+## Dashboard widgets
+
+The dashboard (your home phase) also has analytics:
+
+<CardGroup cols={2}>
+  <Card title="Demos-per-quarter sparkline" icon="chart-bar">
+    Your output trend at a glance. Watch for plateaus, they indicate process drift.
+  </Card>
+  <Card title="Upcoming calls widget" icon="calendar">
+    What's on your calendar this week with a recording bot scheduled.
+  </Card>
+</CardGroup>
+
+## Common reporting workflows
+
+<AccordionGroup>
+  <Accordion title="Friday end-of-week review">
+    1. Reports → Activity tab
+    2. Filter to "this week"
+    3. Skim what happened across the team
+    4. Note any stalled threads to follow up Monday
+  </Accordion>
+
+  <Accordion title="Weekly forecast prep">
+    1. Reports → By User → your row
+    2. Check pending deal count
+    3. Cross-reference with Conversations tab, which threads are warm?
+    4. Walk into your forecast call with clean data
+  </Accordion>
+
+  <Accordion title="Coaching session prep">
+    1. Reports → Top Demos
+    2. Filter to a specific rep
+    3. Pick their highest-engagement demo
+    4. Watch it together; note what they did right
+  </Accordion>
+
+  <Accordion title="Quarter retrospective">
+    1. Demos-per-quarter sparkline on dashboard
+    2. Reports → By User to compare reps
+    3. Activity tab for qualitative signal
+    4. Inform Q+1 goals
+  </Accordion>
+</AccordionGroup>
+
+## What's NOT in Reports
+
+Today (Q2 2026):
+
+- **Deal forecasting**, we surface engagement signal but don't predict deal close
+- **Custom dashboards**, fixed three-tab structure for now
+- **Exporting to BI tools**, coming via API access in Pro+ tier
+
+If you need anything in the "what's NOT" list, [let us know](mailto:hello@trailercast.io), these get prioritized by demand.

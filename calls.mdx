@@ -1,0 +1,147 @@
+---
+title: "Calls"
+description: "The unified inbox for everything that gets recorded, demos, qualifying calls, and meetings."
+icon: "phone"
+---
+
+The Calls phase is your inbox for every recording. Three sub-views (All / Upcoming / Completed) and three recording kinds (Demo / Qualifying Call / Meeting).
+
+## The Calls inbox
+
+**Calls** in the left nav. Three sub-views:
+
+| View | What's in it |
+|---|---|
+| **All** | Everything |
+| **Upcoming** | Bots scheduled but not yet recorded |
+| **Completed** | Done, processed, ready to review |
+
+A pill switcher at the top lets you filter by recording kind: All / Demo / Qualifying Call / Meeting.
+
+Each card shows: kind chip · prospect name (if known) · duration · date · status. Hover to scrub a thumbnail preview.
+
+## Upcoming calls {#upcoming}
+
+Bots scheduled by your calendar integration land here. Default view is **List** (toggle to Calendar if you prefer).
+
+### Actions on an upcoming bot
+
+Open the kebab menu (⋯) on any upcoming row:
+
+<CardGroup cols={2}>
+  <Card title="Reclassify" icon="tag">
+    Change the recording kind (Demo / Qualifying / Meeting) before the meeting starts. Determines which pipeline runs.
+  </Card>
+  <Card title="Don't record" icon="ban">
+    Cancels the bot before the meeting. Available to bot owner + Global Admin.
+  </Card>
+  <Card title="Mark private" icon="lock">
+    Flags the recording so only the owner + Global Admin can see it once it processes. Available to Global Admin only.
+  </Card>
+</CardGroup>
+
+<Tip>
+  Reclassifying BEFORE the meeting saves time, picking the right kind upfront means the right pipeline runs. Reclassifying AFTER works too but re-processes the recording.
+</Tip>
+
+## Call detail page {#detail}
+
+Click any completed call to drill into a detail page that mirrors the trailer review page but adapted for calls.
+
+### Layout
+
+- **Wide video player** on the left
+- **Color-coded topic chapter strip** directly under (from the AI's topic extraction)
+- **Talk-time visualization** (who spoke when)
+- **Right rail tabs**: Summary · Topics · Transcript · Comments · Ask Winter
+
+### Tabs
+
+<Tabs>
+  <Tab title="Summary">
+    For **qualifying calls**: structured breakdown, pain points, decision criteria, qualification verdict, next steps.
+
+    For **meetings**: generic key takeaways + action items.
+  </Tab>
+
+  <Tab title="Topics">
+    Chapter list, each topic the AI identified, with a short summary and click-to-seek timestamp.
+  </Tab>
+
+  <Tab title="Transcript">
+    Full speaker-labeled transcript. Click any segment to seek the video. Searchable with Ctrl+F / Cmd+F.
+  </Tab>
+
+  <Tab title="Comments">
+    Internal team comments + @mentions. Same component as the trailer review surface.
+  </Tab>
+
+  <Tab title="Ask Winter">
+    AI Q&A grounded specifically on this call's transcript and summary. Persists across tab switches and refreshes within the session.
+  </Tab>
+</Tabs>
+
+### Keyboard shortcuts
+
+Same as the trailer review page. `[` and `]` to jump between topic chapters.
+
+## Reclassifying a call {#reclassifying}
+
+Sometimes the auto-classification is wrong (a "demo" that turned out to be discovery, a "meeting" that was actually a qualifying call). Fix it:
+
+<Steps>
+  <Step title="Open the call detail page">
+    From the Calls inbox.
+  </Step>
+
+  <Step title="Open the kebab menu (⋯)">
+    Top right of the detail.
+  </Step>
+
+  <Step title="Pick Reclassify">
+    Choose the correct kind.
+  </Step>
+
+  <Step title="The call moves into that bucket">
+    And re-processes through the appropriate pipeline (so a meeting reclassified as a qualifying call gets the qualification verdict, etc.).
+  </Step>
+</Steps>
+
+## Don't record / Mark private
+
+### Don't record (on Upcoming bots)
+
+Cancels the bot, the meeting still happens, it just doesn't get recorded. Available to the bot owner and Global Admin.
+
+### Mark private (on completed recordings)
+
+Hides the recording from everyone except the owner and the Global Admin. Useful for sensitive conversations (HR, legal, internal strategy).
+
+A private recording is invisible in:
+- The Calls inbox (for non-owners)
+- The Library
+- Universal search results
+- Any team-level reports
+
+The owner and Global Admin always see it.
+
+<Warning>
+  Mark private is **Global Admin only**. Admins and Members can't flag a recording as private, by design.
+</Warning>
+
+## The three recording kinds explained
+
+| Kind | Pipeline | What you get |
+|---|---|---|
+| **Demo** | Full | Trailer + transcript + moments + summary + deal brief |
+| **Qualifying Call** | Lite | Transcript + topic-extracted summary, no trailer ([turn into Buyer Space](/buyer-spaces)) |
+| **Meeting** | Generic | Transcript + key takeaways + action items, no trailer |
+
+Pick the right kind at scheduling time when possible, saves a reclassify step later.
+
+## What's NOT in Calls
+
+Calls is for **anything recorded by a bot or uploaded as a recording**. It's NOT:
+- Your CRM activity log (that lives elsewhere if you've integrated)
+- A list of upcoming meetings without bots scheduled (those live in your calendar tool)
+- A list of email threads (those are in Conversations)

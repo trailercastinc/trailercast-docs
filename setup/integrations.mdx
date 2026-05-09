@@ -1,0 +1,77 @@
+---
+title: "Integrations"
+description: "Connect TrailerCast to the tools that matter to your sales motion."
+icon: "puzzle-piece"
+---
+
+<Note>
+  Find them at: **Settings → Integrations**
+</Note>
+
+You only need to connect what you'll actively use. Each integration is OAuth-based, you grant permission once and can revoke any time from the same screen.
+
+## Calendar
+
+<CardGroup cols={2}>
+  <Card title="Google Calendar" icon="google" href="#calendar-setup">
+    Connect via Google OAuth. Read-only access to your event list.
+  </Card>
+  <Card title="Microsoft 365 Calendar" icon="microsoft" href="#calendar-setup">
+    Connect via Microsoft OAuth. Read-only access to your event list.
+  </Card>
+</CardGroup>
+
+### Calendar setup
+
+<Steps>
+  <Step title="Click Connect">
+    OAuth flow opens in a new tab. Sign in and grant permission.
+  </Step>
+
+  <Step title="Toggle auto-scheduling on">
+    By default, the auto-scheduler looks for meetings whose title contains **"demo"** or **"trailercast"**. You can edit the keyword list.
+  </Step>
+
+  <Step title="Bots schedule themselves">
+    Every 10 minutes the system polls your upcoming calendar and schedules recording bots on matching events. View scheduled bots in **Calls → Upcoming**.
+  </Step>
+</Steps>
+
+<Tip>
+  Bots that join meetings are visible to all attendees as a participant, meetings are explicitly recorded with attendee awareness, never silently. We use Recall.ai for the bot infrastructure.
+</Tip>
+
+## Slack
+
+Pipes notifications to a channel of your choice when:
+- A prospect replies to a trailer or Buyer Space
+- A high-stakes Space gets viewed by a new participant
+- A teammate @mentions you in a comment
+
+Connect via OAuth, pick the destination channel, done.
+
+## Microsoft Teams
+
+Same as Slack but for Teams workspaces.
+
+## Salesforce / HubSpot
+
+Sync deals + contacts so trailers and Buyer Spaces tie to opportunities in your CRM.
+
+<Warning>
+  Both CRM integrations are in **preview**. Bidirectional sync (TrailerCast → CRM) is the next milestone. Today's integration is read-mostly: pull contacts, link demos to deal records.
+</Warning>
+
+### What gets synced
+
+- **Contacts**, pull contact records to attach to demos and Spaces
+- **Deals / Opportunities**, link trailers to specific deal records
+- **Activity**, when a prospect engages with a trailer, log it on the deal timeline
+
+## What's NOT integrated yet
+
+- Outlook (planned)
+- Zoom Direct (planned, today's flow uses Recall.ai which works with Zoom but isn't a first-class native integration)
+- Outreach / Salesloft (planned)
+
+If a missing integration is a blocker, [email us](mailto:hello@trailercast.io), these get prioritized by customer demand.

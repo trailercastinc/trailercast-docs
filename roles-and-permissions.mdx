@@ -1,0 +1,101 @@
+---
+title: "Roles & Permissions"
+description: "Three roles, granular per-permission overrides, and how to transfer Global Admin."
+icon: "user-shield"
+---
+
+TrailerCast has three roles. Each starts with a different default permission set; Global Admin can override any individual permission on any user.
+
+## The three roles
+
+<CardGroup cols={3}>
+  <Card title="Global Admin" icon="crown">
+    **One per company. Immutable** (can only be transferred). Has every permission, regardless of overrides.
+  </Card>
+  <Card title="Admin" icon="user-shield">
+    **All permissions ON** by default. Global Admin can revoke individual permissions and lock the revocation.
+  </Card>
+  <Card title="Member" icon="user">
+    **Curated default-ON set**: upload demos, view team library, review own demos, send share links, leave comments.
+  </Card>
+</CardGroup>
+
+## Detailed comparison
+
+| Capability | Global Admin | Admin (default) | Member (default) |
+|---|---|---|---|
+| Upload demos | Yes | Yes | Yes |
+| View own demos | Yes | Yes | Yes |
+| View team's demos | Yes | Yes | Configurable |
+| Review + edit own demos | Yes | Yes | Yes |
+| Send share links | Yes | Yes | Yes |
+| Leave comments | Yes | Yes | Yes |
+| Create Buyer Spaces | Yes | Yes | Configurable |
+| Edit company settings | Yes | Yes | No |
+| Edit brand / voice | Yes | Yes | No |
+| Manage integrations | Yes | Yes | No |
+| View team-level reports | Yes | Yes | No |
+| Invite + remove teammates | Yes | Yes | No |
+| Edit other users' permissions | Yes | Configurable | No |
+| **Mark recordings private** | Yes | No | No |
+| **Transfer Global Admin** | Yes | No | No |
+| **Delete company account** | Yes | No | No |
+
+## Granular permission grid
+
+Beyond the role defaults, **Settings → Security & Permissions** shows a checkbox grid of every individual permission for every teammate.
+
+Hover any row for an explanation of what that permission unlocks.
+
+### Lock-by-Global-Admin mechanic
+
+For each permission on each user, the Global Admin can:
+
+- **Allow**, user has the permission (role default OR explicit grant)
+- **Revoke**, user does NOT have the permission, but they could be re-granted later
+- **Revoke + Lock**, user does NOT have the permission, and only Global Admin can change it
+
+Locked permissions show a lock icon in the user's matrix. Useful for compliance scenarios (e.g, a contractor who must never see the team library).
+
+## Transferring Global Admin
+
+If you want to hand off the role:
+
+<Steps>
+  <Step title="Settings → Security & Permissions → Transfer Global Admin">
+    Button only visible if you ARE the Global Admin.
+  </Step>
+  <Step title="Pick the new GA from the dropdown">
+    Must be an existing teammate.
+  </Step>
+  <Step title="Confirm">
+    Transfer is immediate. You become Admin; they become GA.
+  </Step>
+</Steps>
+
+<Warning>
+  Transferring Global Admin is irreversible without the new GA's cooperation. Pick someone you trust.
+</Warning>
+
+## When to use which role
+
+| Scenario | Role |
+|---|---|
+| Founder, first user | Global Admin (auto-assigned) |
+| Co-founder / VP Sales | Admin |
+| Sales managers | Admin |
+| Account Executives (AEs) | Member |
+| SDRs | Member |
+| External contractor / agency | Member with revoked permissions for sensitive surfaces |
+| Auditor needing read-only access | Member with explicit grants for view-only permissions |
+
+## Auditing permission changes
+
+Every permission edit is logged in the audit trail (visible to Global Admin). The log captures:
+- Who made the change
+- What permission was changed
+- Old → new value
+- Timestamp
+- Affected user
+
+Available on request via support today; surfaced in-app in a future release.

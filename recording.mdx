@@ -1,0 +1,121 @@
+---
+title: "Recording demos"
+description: "Three ways to get demos into TrailerCast."
+icon: "video"
+---
+
+<Tabs>
+  <Tab title="Upload existing recording">
+    The simplest path. If you've already recorded a demo with Zoom, Loom, Riverside, etc., you can upload it directly.
+
+    <Steps>
+      <Step title="Click Upload demo">
+        Dashboard → **Upload demo** button (top right).
+      </Step>
+
+      <Step title="Drag-and-drop your file">
+        MP4 is recommended. MOV, M4V, and most browser-recordable formats also work.
+      </Step>
+
+      <Step title="Optional: enter prospect name">
+        If you don't, we'll use the filename.
+      </Step>
+
+      <Step title="Click Upload">
+        Watch the progress bar.
+      </Step>
+    </Steps>
+
+    ### Processing stages
+
+    | Progress | What's happening |
+    |---|---|
+    | 5–15% | Uploading to our servers |
+    | 15–35% | Transcribing with Deepgram |
+    | 35–50% | Cleaning the transcript (removing umms, false starts) |
+    | 50–65% | Detecting valuable moments |
+    | 65–90% | Composing the trailer |
+    | 90–100% | Uploading the final trailer |
+
+    When it hits 100%, you're auto-redirected to the trailer review page.
+
+    ### File requirements
+
+    - **Length**: 5 minutes minimum, 90 minutes maximum
+    - **Sweet spot**: 15–45 minutes
+    - **Size**: under 2GB (split into two recordings if larger)
+    - **Audio**: clear, ideally per-speaker tracks if available
+  </Tab>
+
+  <Tab title="Calendar bot (auto-schedule)">
+    If you connect your Google or Microsoft calendar, TrailerCast can automatically schedule a recording bot on every meeting that matches your filter rules.
+
+    <Steps>
+      <Step title="Connect your calendar">
+        See [Integrations](/setup/integrations#calendar).
+      </Step>
+
+      <Step title="Toggle auto-scheduling on">
+        By default, the auto-scheduler looks for meetings whose title contains **"demo"** or **"trailercast"**. Edit the keyword list to taste.
+      </Step>
+
+      <Step title="System polls every 10 minutes">
+        Bots get scheduled on matching events. View them in **Calls → Upcoming**.
+      </Step>
+
+      <Step title="On the day">
+        The bot joins automatically as a participant. After the meeting ends, the recording flows through the same pipeline as an uploaded file.
+      </Step>
+    </Steps>
+
+    <Tip>
+      Bots are visible to all attendees, meetings are explicitly recorded with attendee awareness, never silently. We use Recall.ai for the bot infrastructure.
+    </Tip>
+  </Tab>
+
+  <Tab title="Manual bot (one-off)">
+    For one-off calls that don't match your auto-schedule rules, say a partner sync you want recorded for review.
+
+    <Steps>
+      <Step title="Calls → Upcoming → Schedule new bot">
+        From the Calls phase.
+      </Step>
+
+      <Step title="Paste the meeting URL">
+        Zoom, Google Meet, Microsoft Teams.
+      </Step>
+
+      <Step title="Choose recording kind">
+        - **Demo**, full demo pipeline (transcribe + moments + trailer)
+        - **Qualifying Call**, transcribe + AI summary + topics, no trailer
+        - **Meeting**, generic transcribe + AI summary, no trailer
+      </Step>
+
+      <Step title="The bot joins at the scheduled time">
+        Same flow as auto-scheduled bots from there.
+      </Step>
+    </Steps>
+
+    <Tip>
+      Misclassified after the fact? You can [reclassify](/calls#reclassifying) any time after the recording completes, it re-processes through the appropriate pipeline.
+    </Tip>
+  </Tab>
+</Tabs>
+
+## What's NOT a demo
+
+A few non-obvious things that won't process well:
+
+- **Slide-only meetings with no narration**, the AI infers "live demo" from spoken language, not pixels. A 30-min slide deck without verbal walkthrough produces a near-empty trailer.
+- **Mostly small-talk meetings**, the AI explicitly filters out chitchat. If your call is 80% rapport-building, there won't be much trailer material.
+- **Bad audio**, choppy / muted / heavily-compressed audio causes transcription errors that cascade through the pipeline. Use a real microphone.
+
+## Three recording kinds explained
+
+| Kind | Pipeline | Output |
+|---|---|---|
+| **Demo** | Full | Trailer + transcript + moments + summary + deal brief |
+| **Qualifying Call** | Lite | Transcript + topic-extracted summary, no trailer (turn it into a [Buyer Space](/buyer-spaces)) |
+| **Meeting** | Generic | Transcript + key takeaways + action items, no trailer |
+
+Pick the right kind at scheduling time when possible, it determines which pipeline runs and what gets generated.

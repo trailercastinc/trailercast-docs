@@ -1,0 +1,97 @@
+---
+title: "Sharing trailers"
+description: "Generate share links, track engagement, and see what your prospects experience."
+icon: "paper-plane"
+---
+
+## Generate a share link
+
+<Steps>
+  <Step title="Click Copy share link">
+    Primary action button under the video on the trailer review page.
+  </Step>
+
+  <Step title="Paste the URL anywhere">
+    Email, Slack, LinkedIn DM, SMS, anywhere. Looks like `https://trailercast.cloud/share/abc123…`.
+  </Step>
+
+  <Step title="Recipient watches">
+    No account required. They click and land on a clean, branded share page.
+  </Step>
+</Steps>
+
+<Tip>
+  You can revoke a share link any time from the demo's settings menu. The URL stops working immediately for new visitors.
+</Tip>
+
+## What your prospect sees
+
+When a prospect opens the share link, they get:
+
+- Your **company logo + colors** at the top (whatever you set in [Brand](/setup/brand-and-voice))
+- The **trailer** with full controls
+- The **same color-coded chapter strip** you see, they can skim straight to what matters to them
+- A **chapter list** below the video
+- A **comment box** to leave their name + email + a question or comment
+
+The prospect experience is intentionally simple: no signup, no account, no friction.
+
+<Frame>
+  ![Prospect-facing share page](/images/share-page-example.png)
+</Frame>
+
+## Engagement tracking
+
+Every time a prospect (or anyone with the link) plays the trailer, TrailerCast tracks:
+
+| Signal | What it tells you |
+|---|---|
+| Total views per recipient | How many times they opened the link |
+| Watched percentage | How far they got |
+| Heat-map per moment | Which clips they rewatched (red = hot, blue = cool) |
+| Completions | Whether they finished (≥80%) |
+
+This data shows up in two places on your trailer review page:
+
+1. The **engagement heat-map strip** below the video (visual; color-coded)
+2. The **Engagement tab** in the right rail (per-recipient breakdown table)
+
+### Why this is the most valuable part of the product
+
+When a prospect rewatches the **integrations moment 4 times** and **skips your pricing slide**, you know what to lead with on the next call. Most sales tools never give you this signal. TrailerCast does, every time.
+
+<Tip>
+  **Watch the heat map before your next call**. Lead the conversation with whatever they rewatched. This is the single highest-impact behavior change in your sales motion.
+</Tip>
+
+## Sharing best practices
+
+- **Personalize the message you send the link in**, not the trailer itself. The trailer is for the prospect's evaluation team; your message is for the champion. One sentence about why you cut it for them goes a long way.
+- **Send within 24 hours of the call.** Engagement drops sharply after that.
+- **Keep the email body short.** Two sentences max. The trailer is the content; your email is the lure.
+- **Don't send the same trailer twice.** If you need to re-share, rebuild with different clips first so it's freshly relevant.
+
+## When NOT to share a raw trailer
+
+For high-stakes deals (>$25k ACV, multi-stakeholder evaluation, formal RFP), the right surface is a **Buyer Space**, not a bare trailer link. A Buyer Space combines the trailer with discovery, comparison tables, ROI calculator, and a live conversation thread. One link replaces the typical "deck + sheet + email thread" mess of a B2B sale.
+
+See [Buyer Spaces](/buyer-spaces).
+
+## Anatomy of a share URL
+
+```
+https://trailercast.cloud/share/abc123def456
+                          ^      ^
+                          |      └─ Token (16+ chars, base64url)
+                          └─ Public route (no auth needed)
+```
+
+- Tokens are signed and revokable
+- Anyone with the link can view (think: Google Docs "anyone with link can view")
+- No SEO crawl: share pages have a `noindex` meta tag
+
+## Multiple recipients on one link
+
+The same URL works for everyone you send it to. The Engagement tab shows a per-recipient breakdown based on the email each person enters when they open the share page (or anonymous "Visitor 1, 2, 3..." if they don't enter one).
+
+For deals where you want each stakeholder tracked separately, **use a Buyer Space instead**, each gets a unique signed link.

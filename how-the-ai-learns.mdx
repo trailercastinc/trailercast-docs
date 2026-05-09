@@ -1,0 +1,139 @@
+---
+title: "How the AI learns"
+description: "Plain-English explainer for customers, prospects, and security reviewers."
+icon: "brain"
+---
+
+> A plain-English explainer for customers, prospects, and anyone evaluating TrailerCast. Updated 2026-05-08.
+
+## The short version
+
+TrailerCast's AI gets better in two ways:
+
+1. **You tell it what you sell and how you sell it** (the [AI Personalization form](/setup/ai-personalization), completed at onboarding).
+2. **It watches what works**, which moments your prospects rewatch, which trailers convert, which calls progress to closed-won, and uses those patterns to make sharper picks on your future demos.
+
+What it does **not** do: train Anthropic's general AI models. Look at data from other TrailerCast customers. Send your transcripts anywhere outside the AI providers we list in our privacy policy.
+
+## The two layers
+
+<Tabs>
+  <Tab title="Layer 1. What you tell us">
+    The AI Personalization form (Settings → AI Personalization). Five fields covering:
+
+    - About your **product**
+    - About your **buyer**
+    - Your **industry**
+    - **Value props** you emphasize
+    - **Pain points** your buyers have
+
+    This form **defines the rules** the AI follows for everything it generates for your company. Editable any time, versioned, visible to every AE, not hidden in admin settings.
+
+    The form is the floor. It works from day one, even before you've uploaded a single demo.
+  </Tab>
+
+  <Tab title="Layer 2. What your data shows us">
+    As you use TrailerCast, the system accumulates signal you didn't tell it.
+
+    **Engagement.** When a prospect rewatches a moment 3 times, "this kind of moment matters." When they bounce at the 8-second mark, "this kind of opening doesn't work."
+
+    **AE corrections.** When you "Rebuild with different clips" and remove a moment, that's "this was wrong." When you mark a call private, reclassify a meeting, or @mention a teammate to flag something, every action is signal.
+
+    The system uses **retrieval-augmented generation** (RAG): when picking moments for your *next* demo, it first searches your *past* demos for the 5 most-similar past moments that prospects actually engaged with. The AI imitates the patterns it sees in your high-engagement past work.
+
+    This is why TrailerCast gets noticeably sharper around demo #10–25.
+  </Tab>
+</Tabs>
+
+## How the layers combine
+
+For every output (a trailer's moment selection, a call summary, a deal brief, an Ask Winter answer), the AI assembles its prompt like this:
+
+```
+1. Base instructions (what we hardcode for everyone)
+2. YOUR declared preferences (your form)
+3. YOUR proven examples (top 5 retrieved from your corpus)
+4. The new content to process
+```
+
+Layer 1 sets the rules. Layer 2 sharpens within those rules.
+
+## What the AI does NOT do
+
+<Warning>
+  Read this section if you're evaluating TrailerCast for security review or due diligence.
+</Warning>
+
+- **It does not fine-tune the underlying AI models.** TrailerCast uses Anthropic's Claude, which Anthropic does not allow customers to fine-tune. Your data never modifies the weights of the AI model itself.
+- **It does not share your data with other TrailerCast customers.** Each company's corpus is strictly isolated. Customer A's transcripts can never appear in Customer B's prompts. Enforced at the database level (Postgres row-level security) and verified pre-launch via a documented audit runbook.
+- **It does not send your transcripts to train AI vendors' general models.** The AI providers we use (Anthropic, Deepgram, ElevenLabs) are bound by enterprise data-processing agreements. Inputs are processed for your request and not retained for training.
+- **It does not silently make changes to your rules.** Even when the AI observes patterns and wants to suggest updating your form, nothing changes without your Global Admin explicitly accepting the suggestion.
+- **It does not learn from prospects.** Prospects who watch a trailer aren't "training" the AI. Engagement data informs the SELLER's future trailers, not other prospects' experiences.
+
+## Transparency
+
+Because trust matters more than cleverness, TrailerCast is built to show you why the AI made every decision.
+
+| Feature | What it does |
+|---|---|
+| Form panel on every AI output | See which preferences were active when this output was generated |
+| Form change history | Versioned edits, see who changed what, when, revert if needed |
+| Pending suggestions | RAG-derived form suggestions stay pending until accepted, with sample evidence |
+| Audit log | Every AI call logged: which prompt, which retrieved examples, who triggered it |
+
+## Improvement curve
+
+| Stage | Demos uploaded | What's working |
+|---|---|---|
+| Day 1 | 0 | Personalization form rules apply |
+| Demo 1–5 | A few | Form rules + general AI pattern matching |
+| Demo 5–25 | A handful | Form + retrieval surfaces your best past examples |
+| Demo 25–100 | Real corpus | Retrieval finds strong matches; AI imitates your proven winners |
+| Demo 100+ | Mature | System suggests form updates based on patterns |
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="Does my data train other companies' AI?">
+    No. Strict tenant isolation, enforced at the database level. Retrieval can only see your company's own corpus.
+  </Accordion>
+
+  <Accordion title="If I delete a demo, is it gone from the AI?">
+    Yes. Demo deletion removes the source recording, transcript, AI outputs, and the embeddings used for retrieval. Within ~24 hours the AI no longer references that demo.
+  </Accordion>
+
+  <Accordion title="Can I export everything the AI has 'learned' about my company?">
+    Yes. The Personalization form exports as JSON. Your corpus is just your demos + transcripts + AI outputs, already exportable. The retrieval index is derivative of those, so re-derivable from the exports.
+  </Accordion>
+
+  <Accordion title="What if I'm not happy with how the AI is performing?">
+    Three levers, in order: edit your Personalization form (often the answer), review and reject any auto-suggestions you don't agree with, or contact support, we'll diagnose with you.
+  </Accordion>
+
+  <Accordion title="Are you using my data to train your own proprietary AI?">
+    No. TrailerCast doesn't train any proprietary AI models. We use foundation models from Anthropic (Claude) for reasoning, Deepgram for transcription, and ElevenLabs for narration. Your data is input on a per-request basis under enterprise DPAs.
+  </Accordion>
+
+  <Accordion title="What happens if Anthropic changes its terms?">
+    Our DPA with Anthropic is a binding contract that survives unilateral terms changes. If a future change ever permitted training on customer data, we'd notify you in advance and give you the option to pause AI features on your account before any change took effect.
+  </Accordion>
+</AccordionGroup>
+
+## Roadmap
+
+| Capability | Status |
+|---|---|
+| Personalization form (Layer 1) | Shipped |
+| Retrieval over your corpus (Layer 2) | Q3 2026 |
+| Engagement-weighted retrieval (RAG + signal) | Q4 2026 |
+| AI-suggested form updates with evidence | Q1 2027 |
+| Per-AE personalization within a company | Backlog |
+
+## TL;DR
+
+- The AI follows **rules you set** (Personalization form) and **patterns it sees in your data** (engagement signal). Both are visible to you, both are editable, neither leaves your tenant.
+- It does **not** fine-tune the underlying model, share your data with other customers, or use your data to train Anthropic.
+- It gets noticeably sharper around **demo #10–25** and continues improving with volume.
+- Every AI output is **traceable**, see exactly what rules and examples produced it.
+
+Questions? hello@trailercast.io

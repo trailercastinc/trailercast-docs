@@ -1,0 +1,120 @@
+---
+title: "Privacy & Security"
+description: "How TrailerCast protects your data and your prospects' data."
+icon: "shield-check"
+---
+
+A short summary; full details in our [privacy policy](https://trailercast.io/privacy).
+
+## The basics
+
+<CardGroup cols={2}>
+  <Card title="Tenant isolation" icon="lock">
+    Strict separation between customers. Customer A's transcripts never appear in Customer B's prompts. Enforced at the database level (Postgres row-level security) and verified pre-launch.
+  </Card>
+  <Card title="Encryption" icon="key">
+    All data encrypted in transit (TLS) and at rest (Postgres + Cloudflare R2).
+  </Card>
+  <Card title="No fine-tuning of customer data" icon="brain">
+    TrailerCast doesn't fine-tune AI models on your data. We use foundation models from Anthropic; your data is input on a per-request basis under enterprise DPAs.
+  </Card>
+  <Card title="Audit logs" icon="clipboard-list">
+    Every AI inference is logged with what was retrieved + who triggered it. 90-day retention, then auto-purged.
+  </Card>
+</CardGroup>
+
+## AI providers + data handling
+
+| Provider | What we use it for | Data retention |
+|---|---|---|
+| **Anthropic (Claude)** | Reasoning, summarization, moment detection, Ask Winter | Enterprise DPA, no training on customer data, no retention beyond request |
+| **Deepgram** | Transcription | Enterprise DPA, request-scoped, not retained |
+| **ElevenLabs** | Voice cloning, narration synthesis | Enterprise DPA, voice samples retained only for the customer's own use |
+| **Recall.ai** | Calendar bot meeting recordings | Recordings transient, fetched immediately into TrailerCast then deleted from Recall |
+
+## Data deletion
+
+| Action | What happens |
+|---|---|
+| Delete a demo | Source recording, transcript, AI outputs, embeddings, all purged within 24 hours |
+| Delete an account | Everything purged within 30 days (regulatory wait period in some jurisdictions) |
+| Cancel subscription | Account stays read-only for 30 days, then auto-deleted |
+
+## Private recordings
+
+Global Admin can mark any recording as **private**. Private recordings are invisible to:
+
+- Other teammates (Members and Admins, including Admins with normally elevated permissions)
+- The Library
+- Universal search results
+- Any team-level reports
+
+The owner (whoever's account the recording is on) and the Global Admin always see private recordings.
+
+This is the right surface for HR conversations, legal calls, internal strategy meetings, anything sensitive that shouldn't be team-visible by default.
+
+## What we capture vs what we don't
+
+**We capture:**
+- The recording you uploaded or that the bot pulled in
+- The transcript we generated
+- AI-generated outputs (summary, moments, deal brief)
+- Engagement on share pages (views, watch %, heat-map)
+- Comments, conversations, and team activity
+
+**We don't capture:**
+- Other tabs in your browser
+- Your screen content outside of recordings you explicitly upload or schedule a bot for
+- Your email content or calendar event bodies (for calendar integrations, we read titles and attendees only)
+- Any data from other TrailerCast customers, strict tenant isolation
+
+## Compliance posture
+
+| Status | Notes |
+|---|---|
+| **SOC2 Type 1** | In progress (target: Q3 2026) |
+| **SOC2 Type 2** | Following Type 1 (target: Q1 2027) |
+| **GDPR** | Compliant (DPA available on request, data subject access requests handled) |
+| **CASL** | Compliant (suppression list, HMAC unsubscribe, List-Unsubscribe header) |
+| **HIPAA** | Not currently. TrailerCast is not BAA-signed. Healthcare customers should not record PHI. |
+
+## Subprocessor list
+
+We list every subprocessor on our [privacy page](https://trailercast.io/privacy). Major ones:
+
+- **Anthropic** (AI reasoning)
+- **Deepgram** (transcription)
+- **ElevenLabs** (voice synthesis)
+- **Recall.ai** (calendar meeting bots)
+- **Cloudflare R2** (object storage for recordings + trailers)
+- **Railway** (compute)
+- **Vercel** (frontend hosting)
+- **Stripe** (billing)
+- **Postmark** (transactional email)
+- **Plausible** (analytics, cookieless)
+- **Microsoft Clarity** (analytics, cookie-gated)
+
+We give 30 days' notice before adding a new subprocessor.
+
+## Data exports
+
+You can export:
+- Any individual demo's transcript + AI outputs (settings menu on the demo)
+- Bulk demo metadata via the Pro+ API (coming Q3 2026)
+- Audit log via support email request
+
+## Security incident response
+
+If we discover a security incident affecting your account, we'll notify you within 72 hours of confirmation, with:
+- Description of the incident
+- Affected data scope
+- Mitigation steps taken
+- Recommendation for your action (rotate API keys, audit user activity, etc.)
+
+Our incident response runbook is available to enterprise customers under NDA.
+
+## Reporting a vulnerability
+
+Found something? Email **security@trailercast.io**. We respond within 24 hours and don't take legal action against good-faith researchers.
+
+For the full responsible-disclosure policy, see [trailercast.io/security](https://trailercast.io/security).

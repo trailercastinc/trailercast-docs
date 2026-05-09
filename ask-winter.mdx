@@ -1,0 +1,101 @@
+---
+title: "Ask Winter"
+description: "TrailerCast's built-in AI assistant, named after the Samoyed in our logo (he/him)."
+icon: "dog"
+---
+
+Winter is the floating AI pill at the bottom right of every authenticated page in TrailerCast. He answers questions about the product, queries your data, and now ships in two flavors: the global pill and per-page tabs.
+
+## What Winter knows
+
+<CardGroup cols={2}>
+  <Card title="The product itself" icon="book">
+    Features, settings, troubleshooting. Winter can answer "how do I rebuild a trailer?" without you reading these docs.
+  </Card>
+  <Card title="Your data" icon="database">
+    Every demo, call, transcript, summary, deal brief, comment, conversation. Ask "how many demos have I uploaded this month?" or "what was the verdict on my last call with Acme Corp?"
+  </Card>
+  <Card title="Your AI Personalization context" icon="sparkles">
+    Industry, ICP, value props, pain points. Winter grounds answers in your specific business context.
+  </Card>
+  <Card title="The recording you're looking at" icon="film">
+    On a call detail or demo detail page, Winter automatically scopes its answer to that recording, no need to spell out which call.
+  </Card>
+</CardGroup>
+
+## Two ways to use Winter
+
+### 1. The global pill
+
+Bottom right of every page. Click to open a chat panel.
+
+**Use cases:**
+- Quick how-to questions
+- Cross-cutting data queries ("which prospects have rewatched my pricing slide more than 3 times?")
+- Drafting follow-up email language
+
+**Page-aware context**: when you're on a call detail or demo detail page, Winter automatically attaches that recording's id and uses it as grounding. So "summarize the key takeaways" works without you spelling out which call you mean.
+
+### 2. The per-page tab
+
+Every call detail and demo detail page has a dedicated **Ask Winter** tab in the right rail.
+
+**Use cases:**
+- Long Q&A about one specific recording
+- Iterative drafting (multiple rounds of "make it more direct")
+- Conversations that should persist if you refresh the page
+
+**Persistence model:**
+- Within the session: switch tabs, refresh the page, your conversation history stays.
+- Between recordings: switch to a different demo and it starts fresh (no leak).
+- After closing the tab: history clears.
+
+## Things Winter is good at
+
+| Question | What Winter does |
+|---|---|
+| "Summarize the key takeaways" | Pulls AI summary, writes a 3-bullet recap |
+| "What were the main objections raised?" | Quotes the prospect verbatim where possible |
+| "Draft a follow-up email" | Uses engagement data + your AI Personalization to angle the message |
+| "How does my Q2 win rate compare to Q1?" | Queries your data, returns numbers |
+| "Find me demos where we discussed pricing" | Searches transcripts |
+| "What's the qualification verdict on Acme?" | Reads the AI summary verdict |
+
+## Things Winter is NOT good at
+
+- **Long-form creative writing.** Use the Generate Follow-Up Message modal instead, it's optimized for that.
+- **Predicting the future.** Winter answers from your data; it doesn't forecast deals.
+- **Cross-customer benchmarks.** Strict tenant isolation. Winter only sees YOUR company's data.
+- **Real-time data fetches from your CRM.** CRM integrations are read-mostly; Winter sees what's been synced, not live data.
+
+## Suggested prompts
+
+The chat panel shows suggested prompts the first time you open it. They're context-aware:
+
+**On a demo trailer:**
+- *"Summarize the demo in 3 bullets"*
+- *"What features got the most engagement?"*
+- *"Draft a follow-up email I can send to the prospect"*
+
+**On a qualifying call:**
+- *"Summarize the key takeaways in 3 bullets"*
+- *"What were the main objections raised?"*
+- *"What action items did we agree to?"*
+
+**Generic:**
+- *"What's the verdict on my last 3 qualifying calls?"*
+- *"Which prospect has rewatched my trailer the most?"*
+- *"Show me demos where pricing came up"*
+
+## Cost
+
+You don't pay anything extra for Winter. It's included in every plan. We use Anthropic Claude under the hood; usage is bounded by hard caps so a runaway question can't exhaust your budget.
+
+## Privacy + data
+
+Same rules as the rest of TrailerCast:
+- Winter never sees data from other companies (strict tenant isolation)
+- Winter's queries don't train Anthropic's models
+- Conversation history is client-side only (sessionStorage); we don't persist it server-side for V1
+
+See [Privacy & Security](/privacy-and-security) for details.

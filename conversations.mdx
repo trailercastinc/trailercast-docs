@@ -1,0 +1,120 @@
+---
+title: "Conversations & follow-ups"
+description: "Replying to prospects, drafting follow-up messages, and managing your inbox."
+icon: "comments"
+---
+
+## Threads on each demo
+
+When a prospect submits a question or comment from your share page, it lands as a **thread** on that demo's right-rail Engagement tab.
+
+Each thread groups all messages from one prospect (by email).
+
+<CardGroup cols={2}>
+  <Card title="Click to expand" icon="chevron-down">
+    See the full conversation history with timestamps.
+  </Card>
+  <Card title="Awaiting reply badge" icon="bell">
+    Threads where the prospect's last message hasn't been answered.
+  </Card>
+  <Card title="Message kind" icon="tag">
+    Each thread shows whether the last message was a Question, Follow-up request, or Comment.
+  </Card>
+  <Card title="Reply inline" icon="reply">
+    No need to leave the page; type and send directly from the thread.
+  </Card>
+</CardGroup>
+
+## Replying to a prospect
+
+In an expanded thread:
+
+<Steps>
+  <Step title="Type your reply">
+    Plain text textarea. Markdown not supported (intentional, keeps the prospect-facing email clean).
+  </Step>
+
+  <Step title="Optional: Preview as prospect">
+    Opens the share page exactly the way they see it, useful to make sure your trailer still looks right before you respond.
+  </Step>
+
+  <Step title="Click Send reply">
+    The prospect gets an email with your message + a signed link back to the share page.
+  </Step>
+
+  <Step title="Their reply lands back here">
+    All in one thread, all in chronological order. No separate inbox to check.
+  </Step>
+</Steps>
+
+<Tip>
+  The signed link in the email expires after 30 days. If a prospect tries to resume an old conversation past that, they'll see a polite "this link expired" page with a fresh CTA back to your share link.
+</Tip>
+
+## Generate Follow-Up Message
+
+The **Generate Follow-Up Message** button (above the chapter list on the trailer review page) opens a modal that drafts a follow-up email for you using:
+
+- The trailer's content
+- The prospect's engagement data (what they rewatched, what they skipped)
+- Your AI Personalization form context
+
+<Steps>
+  <Step title="Click Generate Follow-Up Message">
+    Above the "In this trailer" chapter list.
+  </Step>
+
+  <Step title="Pick a tone">
+    Professional · Friendly · Concise · Detailed.
+  </Step>
+
+  <Step title="Optional: add context">
+    "Don't mention pricing yet" or "lead with the integrations question they had". Claude reads it as guidance.
+  </Step>
+
+  <Step title="Review the draft">
+    Edit inline. The AI is good but not perfect.
+  </Step>
+
+  <Step title="Copy and paste into your email tool">
+    TrailerCast doesn't send the email for you (intentional, keeps you in control).
+  </Step>
+</Steps>
+
+## Cross-demo conversations inbox
+
+The **Conversations** phase in the left nav shows every active prospect thread across every demo you've sent. Useful when you want to see "what's open with anyone" without clicking into each demo separately.
+
+### Filters
+
+Each filter narrows independently (AND logic):
+
+- **By demo**, pick a specific trailer
+- **By prospect**, pick a specific contact
+- **By date range**, last 7 days, last 30 days, custom
+
+### Sort + organize
+
+- Newest first by default
+- Pin a thread to keep it visible
+- Mark resolved when a deal moves forward (or stalls)
+
+## Email reply bridging
+
+When a prospect replies to TrailerCast's notification email (instead of clicking back into the share page), their reply lands back in the same thread on TrailerCast.
+
+<Tip>
+  This means prospects can engage entirely via email if they prefer, they never have to click into your share page after the first visit. You see their replies in the same thread either way.
+</Tip>
+
+How it works:
+- Outbound emails set a reply-to address scoped to that thread
+- Inbound mail to that address gets parsed and routed to the right thread
+- No mail-server setup needed on your end, handled entirely by us
+
+## Best practices for prospect engagement
+
+- **Reply within 4 business hours** to "Awaiting reply" threads. Speed of response correlates strongly with deal progression.
+- **Use Generate Follow-Up Message before re-engaging a cold thread.** The AI uses fresh engagement data, what they DID watch, to angle the message.
+- **For multi-stakeholder deals, use a Buyer Space instead.** Conversations tab is for single-prospect threads; Spaces handle teams. See [Buyer Spaces](/buyer-spaces).
+- **Send Slack notifications to a #wins channel.** When a prospect re-engages a stalled thread, that's a buy signal. Hook up the Slack integration to your wins channel and your team will see it in real time.

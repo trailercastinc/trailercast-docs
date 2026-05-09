@@ -1,0 +1,127 @@
+---
+title: "Reviewing trailers"
+description: "A tour of the trailer review page, every panel, every action."
+icon: "eye"
+---
+
+When a demo finishes processing you land on the trailer review page. This is where you'll spend the most time. Here's what's on it.
+
+## Page layout (desktop)
+
+The page is two columns; collapses to a single stack on mobile.
+
+<CardGroup cols={2}>
+  <Card title="Left column" icon="film">
+    Video + content controls, the player, chapter strip, action buttons, engagement heat-map, "In this trailer" chapter list, and the recording-review pill switcher.
+  </Card>
+  <Card title="Right column" icon="rectangle-list">
+    Tabbed reference panel. Engagement (default), Highlights, Comments, Ask Winter. Tabs are sticky; switch freely without losing video position.
+  </Card>
+</CardGroup>
+
+## The video player
+
+The top of the left column. Standard browser video controls, play, pause, scrub, fullscreen, captions, playback speed.
+
+Above the player: prospect name (caption).
+
+## Color-coded chapter strip
+
+Directly under the video, you'll see a horizontal strip of colored blocks. Each block represents one moment the AI selected.
+
+<Steps>
+  <Step title="Hover">
+    See the moment's label + start timestamp in a tooltip.
+  </Step>
+  <Step title="Click">
+    Player jumps to that moment + auto-plays.
+  </Step>
+  <Step title="Watch the active block">
+    While the video plays, the current segment's block lights up brighter and gets a small ring around it, so you always know where you are.
+  </Step>
+</Steps>
+
+### Keyboard shortcuts
+
+| Key | What it does |
+|---|---|
+| `[` | Jump to the previous chapter |
+| `]` | Jump to the next chapter |
+
+<Tip>
+  Shortcuts only fire when you're focused outside any text input, they won't hijack your typing in the Comments composer or Ask Winter chat.
+</Tip>
+
+## Action buttons
+
+Under the player. Five primary actions:
+
+<CardGroup cols={2}>
+  <Card title="Copy share link" icon="link">
+    The primary action. Puts a `/share/<token>` URL on your clipboard. Send anywhere; recipient doesn't need an account.
+  </Card>
+  <Card title="Download" icon="download">
+    Saves the trailer MP4 to disk.
+  </Card>
+  <Card title="Rebuild with different clips" icon="rotate" href="/trailers/edit">
+    Recompose without re-uploading. See [Editing](/trailers/edit).
+  </Card>
+  <Card title="Build your own trailer" icon="hammer" href="/trailers/edit#custom">
+    Hand-pick specific clips for a custom trailer.
+  </Card>
+  <Card title="Watch full recording" icon="film">
+    Opens a modal with the full unedited source.
+  </Card>
+</CardGroup>
+
+## Engagement heat-map strip
+
+Below the action buttons. Color-coded, hot moments (rewatched repeatedly) are red, cool moments are blue. Appears once prospects start watching the trailer.
+
+This is your most actionable feedback signal. **Lead your next conversation with whatever they rewatched.**
+
+## "In this trailer" chapter list
+
+Numbered list of every moment in order: feature title, benefit, timestamp.
+
+Each row has a **"Watch full segment"** pill (when the source recording is available), clicking it opens the full-recording modal at the start of that clip in the original meeting. Useful for seeing the lead-up to a highlighted moment.
+
+## Recording review pills
+
+Three-pill switcher under the chapter list:
+
+<Tabs>
+  <Tab title="Talking Timeline">
+    A visualization of who spoke when, with each speaker on their own row. Click any segment to seek the full recording (modal player) to that moment. Useful for "what did the prospect say at minute 22?" without scrolling a transcript.
+  </Tab>
+
+  <Tab title="AI Deal Brief">
+    A structured one-page summary: prospect's questions, objections raised, things they got excited about, competitors mentioned, recommended next actions. Generated automatically. Especially useful for handing off a deal to another rep.
+  </Tab>
+
+  <Tab title="Transcript">
+    Full speaker-labeled transcript with timestamps. Click any segment to seek. Searchable with Ctrl+F / Cmd+F.
+  </Tab>
+</Tabs>
+
+## What's in the right rail
+
+Four tabs covering everything not directly about the video itself. See [Right rail tabs](/trailers/right-rail) for the full breakdown.
+
+## Common workflows
+
+<CardGroup cols={2}>
+  <Card title="Reviewing before sending" icon="square-check">
+    1. Watch the trailer end-to-end
+    2. Open AI Deal Brief, scan for accuracy
+    3. If off, click Rebuild with different clips
+    4. Once happy, Copy share link
+  </Card>
+  <Card title="Following up after engagement" icon="reply">
+    1. Open Engagement tab in right rail
+    2. See which moments prospect rewatched
+    3. Open Ask Winter tab
+    4. Ask "Draft a follow-up that leads with [their hot moment]"
+    5. Copy the response, paste into your email
+  </Card>
+</CardGroup>

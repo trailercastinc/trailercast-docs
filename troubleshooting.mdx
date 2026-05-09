@@ -1,0 +1,112 @@
+---
+title: "Troubleshooting"
+description: "Common issues + how to fix them."
+icon: "wrench"
+---
+
+<AccordionGroup>
+  <Accordion title="Trailer upload gets stuck at 35% (transcribing)">
+    Most common cause: the audio file is corrupt or near-silent. Re-export from your source tool with a clear audio track. If the issue persists, [contact support](mailto:hello@trailercast.io) with the demo ID.
+  </Accordion>
+
+  <Accordion title="'Watch full recording' button doesn't work">
+    Source recording wasn't preserved (legacy demos) or the R2 upload is still in progress (very recent demos). Wait 1–2 minutes after the demo finishes and try again.
+
+    Older demos (pre-Phase 2D) didn't preserve the source, for those, this button is permanently unavailable.
+  </Accordion>
+
+  <Accordion title="Trailer plays but audio is out of sync with video">
+    Browser cache issue 95% of the time. Hard refresh (Ctrl+Shift+R / Cmd+Shift+R). If still desynced, [contact support](mailto:hello@trailercast.io) with a screenshot.
+  </Accordion>
+
+  <Accordion title="Calendar bot didn't join my meeting">
+    Check **Calls → Upcoming**, was the bot scheduled at all?
+
+    - **No bot scheduled**: the meeting title likely didn't match your filter rules. Edit the rules in Settings → Integrations or schedule the bot manually.
+    - **Bot scheduled but didn't join**: most common cause is the meeting URL changed after the bot was scheduled. Always re-paste the URL if your meeting tool generated a new one.
+  </Accordion>
+
+  <Accordion title="Prospect says they can't open the share link">
+    Most common cause: the link was revoked. Check the demo's settings menu, there's a "Revoked" indicator. If accidentally revoked, you can re-issue a new link.
+
+    Less common: the share token has been blacklisted by a corporate firewall. Workaround: generate a fresh share link, or send the trailer download as an MP4 attachment.
+  </Accordion>
+
+  <Accordion title="AI Personalization form changes don't seem to apply">
+    Updates take effect on the **next** AI call. If you saved changes and re-ran a feature within a few seconds, the cache might still be busting. Try again 30 seconds later.
+
+    To verify: open Ask Winter and ask "what's my company description?", if it returns your latest text, the form is active.
+  </Accordion>
+
+  <Accordion title="'Couldn't cancel' error when clicking Don't Record">
+    Known edge case if the bot has already joined the meeting (Recall.ai locks cancellation once a meeting is in progress).
+
+    **Workarounds:**
+    - Ask the bot to leave from within the meeting itself (right-click → kick participant)
+    - Wait for the meeting to end and delete the resulting recording
+    - As Global Admin: mark the recording private so it's not visible to your team
+  </Accordion>
+
+  <Accordion title="My trailer shows 0 moments">
+    Means the AI didn't find any high-confidence highlights. Common causes:
+    - Recording was very short (<5 minutes)
+    - Mostly slides without verbal narration
+    - Audio quality was poor (heavy compression, muted, lots of background noise)
+    - Mostly small-talk with no actual product demonstration
+
+    **Workaround**: Use **Build Your Own Trailer** to manually pick clips.
+  </Accordion>
+
+  <Accordion title="Sign-in keeps logging me out">
+    Most common cause: cookies blocked or third-party cookies disabled in your browser settings. Add `trailercast.cloud` to your cookie allowlist.
+
+    If you use 1Password or LastPass, they sometimes auto-fill stale credentials, disable autofill on the TrailerCast domain.
+  </Accordion>
+
+  <Accordion title="Can't invite a teammate (button doesn't work / errors)">
+    Two common causes:
+    - **Seat limit hit**: you're at your tier's seat cap. Upgrade in Billing or remove an existing teammate.
+    - **Domain mismatch**: in some compliance modes we restrict invites to your verified email domain. Contact support to relax this.
+  </Accordion>
+
+  <Accordion title="Buyer Space won't publish">
+    Most common cause: required fields missing. Each section has required fields (e.g. Discovery requires at least one pain point). Look for red error highlights in the editor.
+
+    Less common: the slug you chose is already taken across all of TrailerCast. Pick a more specific slug.
+  </Accordion>
+
+  <Accordion title="Stripe checkout fails">
+    Common causes:
+    - Card declined (most common, try a different card)
+    - Browser blocking the Stripe domain (check ad blocker)
+    - Payment requires 3D Secure verification you didn't complete (re-do checkout, watch for the verification popup)
+
+    Persistent failures: email billing@trailercast.io with the timestamp; we can manually invoice.
+  </Accordion>
+
+  <Accordion title="Voice cloning produces robotic narration">
+    Two common causes:
+    - **Sample too short**: aim for 20–30 seconds, not 5–10
+    - **Background noise in sample**: re-record in a quiet room, no echo
+
+    If still robotic with a clean 30-second sample, use a pre-recorded voice from the Voice catalogue instead.
+  </Accordion>
+
+  <Accordion title="Export / download is missing recent demos">
+    Most common cause: you're filtering by date or owner. Reset filters and try again.
+
+    If genuinely missing: contact support with the date range and the prospect names you're looking for; we can locate them in the database directly.
+  </Accordion>
+</AccordionGroup>
+
+## Still stuck?
+
+[hello@trailercast.io](mailto:hello@trailercast.io), typical response within 4 business hours.
+
+When emailing, include:
+- A short description of what you were trying to do
+- A screenshot or screen recording (if visual)
+- The demo ID or URL if related to a specific recording
+- Your browser + OS
+
+Speeds up our response considerably.

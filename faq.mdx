@@ -1,0 +1,101 @@
+---
+title: "FAQ"
+description: "Common questions, answered."
+icon: "circle-question"
+---
+
+<AccordionGroup>
+  <Accordion title="Can my prospects see my internal comments?">
+    No. Comments are internal-only. Prospects only see what's on the share page or in the Buyer Space (the trailer + sections you've published).
+  </Accordion>
+
+  <Accordion title="Can I edit a trailer's narration text?">
+    Not directly today. You can:
+    1. Rebuild with different clips (which regenerates the narration), OR
+    2. Build a custom trailer from scratch with a custom narration prompt.
+
+    Direct narration editing is on the roadmap.
+  </Accordion>
+
+  <Accordion title="What happens if a demo upload fails?">
+    You'll see an error panel with a Retry button. The most common cause is a corrupt MP4 file or an exceptionally long recording (>90 minutes). Try splitting or re-exporting.
+  </Accordion>
+
+  <Accordion title="Can I move a demo between users on my team?">
+    Not directly today. You can re-share the link with anyone. Ownership transfer is on the roadmap.
+  </Accordion>
+
+  <Accordion title="What's the difference between a Buyer Space and just sharing a trailer link?">
+    A trailer link is one video + a comment thread. A Buyer Space adds structured context (your understanding of the prospect's pain, comparison tables, ROI, implementation plan).
+
+    Use trailer links for top-of-funnel; use Buyer Spaces for active deals. See [Buyer Spaces](/buyer-spaces).
+  </Accordion>
+
+  <Accordion title="Can I download my data?">
+    Yes, every demo's transcript and AI outputs are exportable from the demo settings menu. Bulk export of all demos is available on request to support.
+  </Accordion>
+
+  <Accordion title="What if I want to use TrailerCast with a co-worker who isn't on my team yet?">
+    Invite them via Settings → Security & Permissions. They'll get an email with a one-click join link. Trial-period limits apply; tier limits apply post-trial.
+  </Accordion>
+
+  <Accordion title="Does TrailerCast work on mobile?">
+    The app works on mobile browsers (review trailers, read summaries, post comments). Recording uploads from a phone work but are not the recommended workflow, use desktop.
+
+    Prospects watching share pages on mobile is fully supported.
+  </Accordion>
+
+  <Accordion title="What languages does the transcription support?">
+    English first-class. Spanish, French, German, Portuguese, Italian, Dutch, Japanese, Korean, Mandarin all work in beta. AI summary quality is best in English.
+  </Accordion>
+
+  <Accordion title="How long is a recording stored?">
+    Indefinitely while your account is active, unless you delete it manually. Deleted recordings are purged within 24 hours from Postgres and within R2's retention window from blob storage.
+  </Accordion>
+
+  <Accordion title="Does my data train other companies' AI?">
+    No. Strict tenant isolation. See [Privacy & Security](/privacy-and-security).
+  </Accordion>
+
+  <Accordion title="Are you using my data to train your own proprietary AI?">
+    No. TrailerCast doesn't train any proprietary AI models. We use foundation models from Anthropic (Claude) for reasoning, Deepgram for transcription, and ElevenLabs for narration. Your data is input on a per-request basis under enterprise DPAs.
+  </Accordion>
+
+  <Accordion title="Can I integrate TrailerCast with my CRM?">
+    Salesforce and HubSpot integrations are in preview today (read-mostly). Bidirectional sync is the next milestone. Outreach + Salesloft on the roadmap.
+  </Accordion>
+
+  <Accordion title="What if Anthropic changes its terms?">
+    Our DPA with Anthropic is a binding contract that survives unilateral terms changes. If a future change ever permitted training on customer data, we'd notify you in advance and give you the option to pause AI features on your account before any change took effect.
+  </Accordion>
+
+  <Accordion title="How do I share a trailer with my whole sales team for them to see it as a coaching example?">
+    Two options:
+    1. Share the public `/share/<token>` link in your Slack, they don't need TrailerCast accounts to view
+    2. If they have TrailerCast accounts, every teammate with `demos.view_team` permission sees it in the Library
+  </Accordion>
+
+  <Accordion title="Can prospects forward the share link to their teammates?">
+    Yes. The share link is anyone-with-link. They can forward it freely. The Engagement tab attributes views by the email each person enters, so multi-stakeholder forwarding is tracked.
+
+    For more controlled multi-stakeholder access, use a Buyer Space, each stakeholder gets a unique signed link.
+  </Accordion>
+
+  <Accordion title="What happens during a network / R2 outage?">
+    Uploads fail gracefully (you can retry once R2 is back). Existing trailers may stall during playback if R2 is degraded, refresh once status.trailercast.io shows green.
+  </Accordion>
+
+  <Accordion title="Do you have an API?">
+    Limited Pro+ API in development (Q3 2026). Today the only programmatic surface is webhooks (Slack/Teams notifications).
+  </Accordion>
+
+  <Accordion title="How do I cancel?">
+    Settings → Billing → Manage subscription → Cancel. Takes effect at the end of the current billing period. Account stays read-only for 30 days, then auto-deletes.
+  </Accordion>
+
+  <Accordion title="What if my demo has multiple speakers and I want only one's voice cloned?">
+    Voice cloning uses a sample you upload directly, it doesn't pull from demo recordings. Record the specific voice you want cloned and upload it via Settings → Voice.
+  </Accordion>
+</AccordionGroup>
+
+Didn't find your question? [hello@trailercast.io](mailto:hello@trailercast.io).

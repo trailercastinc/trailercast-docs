@@ -1,0 +1,110 @@
+---
+title: "Right rail tabs"
+description: "Engagement, Highlights, Comments, Ask Winter, everything not directly about the video."
+icon: "rectangle-list"
+---
+
+The right column on the trailer review page is a tabbed reference panel. Four tabs:
+
+## Engagement (default)
+
+Shows prospect activity on this specific trailer.
+
+### Conversations
+
+Every prospect thread that's started on this demo's share link. Click a thread to expand and see the full conversation history. Reply inline (more in [Conversations](/conversations)).
+
+Threads with an "Awaiting reply" badge are prospect questions you haven't responded to yet.
+
+### Demo stats
+
+Four key metrics:
+
+| Stat | What it means |
+|---|---|
+| Views | Total times anyone played the trailer |
+| Unique viewers | Distinct viewer sessions |
+| Avg watched % | Mean completion rate across all sessions |
+| Completions | Sessions that watched ≥80% |
+
+Below the stats, a per-recipient breakdown table. Useful for "did Sarah at Acme actually watch it?"
+
+### Empty state
+
+If you haven't shared the trailer yet (or no one's watched), you'll see a nudge: *"Once you share this trailer, prospect threads + view stats will appear here."*
+
+## Highlights
+
+AI-derived feature/benefit summary. Lists the top 3 moments with their feature labels and benefit framings.
+
+The lead is a comma-separated headline like:
+> Real-time analytics · Two-click integration setup · Role-based access controls
+
+Useful for:
+- Drafting follow-up emails (lift the lead phrase as your subject)
+- Briefing teammates ("here's what this trailer covers")
+- Quickly orienting yourself before a follow-up call
+
+If the demo has no moments yet (still processing or pipeline edge case), you'll see an empty-state nudge.
+
+## Comments
+
+Internal-only team chat about this specific demo. Prospects never see these.
+
+<Steps>
+  <Step title="Type your comment">
+    Standard text input. Rich text not supported, keep it simple.
+  </Step>
+
+  <Step title="Mention a teammate with @">
+    Press `@` to open the autocomplete picker. Pick a teammate; their name becomes a pill.
+  </Step>
+
+  <Step title="Save">
+    Comment appears in the thread immediately. Mentioned teammates get a notification.
+  </Step>
+
+  <Step title="Edit / delete via menu">
+    Three-dot menu next to your own comments. You can only edit/delete your own.
+  </Step>
+</Steps>
+
+### Count badge
+
+The Comments tab shows a small count badge (e.g. "Comments (3)") so you can see at a glance whether teammates have weighed in without opening the tab.
+
+### Use cases
+
+- **Coaching**: drop a comment on a teammate's trailer. "you nailed this objection, same playbook on the next one"
+- **Deal handoff**: when transferring a deal to another rep, leave context comments they can read in order
+- **Q&A with engineering**: @mention an engineer when a prospect asks something technical the AE can't answer
+- **Stakeholder review**: SDR loops in their manager via @mention before sending the trailer to the prospect
+
+## Ask Winter
+
+Chat with the AI assistant, grounded specifically on this trailer's transcript and AI summary.
+
+Try things like:
+
+- *"Summarize the key takeaways in 3 bullets."*
+- *"What were the main objections raised?"*
+- *"What action items did we agree to?"*
+- *"Draft a 2-paragraph follow-up email I can send to the prospect."*
+- *"How did the prospect react to the pricing discussion?"*
+
+### Conversation persistence
+
+- **Within the session**: switch tabs (or refresh the page) and your conversation history stays.
+- **Between demos**: switch to a different demo and Ask Winter starts fresh, no leak from one demo's Q&A into another.
+- **After closing the tab**: history clears (matching the global Ask Winter pill UX).
+
+### How is this different from the global Ask Winter pill?
+
+Same AI, same grounding logic, two surfaces:
+
+| Surface | When to use |
+|---|---|
+| **Right-rail Ask Winter tab** | Long Q&A about one specific trailer where you want the conversation to persist |
+| **Global Ask Winter pill** (bottom right) | Quick questions, anywhere in the app, also auto-attaches the current page's context |
+
+Read more in [Ask Winter](/ask-winter).

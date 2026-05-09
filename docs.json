@@ -1,0 +1,149 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "TrailerCast Docs",
+  "description": "End-to-end documentation for TrailerCast — the AI Sales Experience Platform.",
+  "colors": {
+    "primary": "#0891b2",
+    "light": "#0ea5e9",
+    "dark": "#0c4a6e"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://trailercast.io"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": [
+              "introduction",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Setup",
+            "pages": [
+              "setup/account",
+              "setup/ai-personalization",
+              "setup/brand-and-voice",
+              "setup/integrations",
+              "setup/team"
+            ]
+          },
+          {
+            "group": "Recording demos",
+            "pages": [
+              "recording"
+            ]
+          },
+          {
+            "group": "Trailers",
+            "pages": [
+              "trailers/reviewing",
+              "trailers/right-rail",
+              "trailers/edit"
+            ]
+          },
+          {
+            "group": "Engaging prospects",
+            "pages": [
+              "sharing",
+              "conversations",
+              "buyer-spaces"
+            ]
+          },
+          {
+            "group": "Calls",
+            "pages": [
+              "calls"
+            ]
+          },
+          {
+            "group": "AI features",
+            "pages": [
+              "ask-winter",
+              "how-the-ai-learns",
+              "reports"
+            ]
+          },
+          {
+            "group": "Admin",
+            "pages": [
+              "roles-and-permissions",
+              "privacy-and-security",
+              "billing"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "best-practices",
+              "keyboard-shortcuts",
+              "glossary",
+              "faq",
+              "troubleshooting",
+              "support",
+              "changelog"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Status",
+        "href": "https://status.trailercast.io"
+      },
+      {
+        "label": "Support",
+        "href": "mailto:hello@trailercast.io"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Open TrailerCast",
+      "href": "https://trailercast.cloud"
+    }
+  },
+  "footer": {
+    "socials": {
+      "linkedin": "https://www.linkedin.com/company/trailercast",
+      "twitter": "https://twitter.com/trailercast",
+      "github": "https://github.com/trailercastinc"
+    },
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          { "label": "Pricing", "href": "https://trailercast.io/pricing" },
+          { "label": "Compare", "href": "https://trailercast.io/compare" },
+          { "label": "Privacy", "href": "https://trailercast.io/privacy" }
+        ]
+      },
+      {
+        "header": "Get help",
+        "items": [
+          { "label": "Email support", "href": "mailto:hello@trailercast.io" },
+          { "label": "Status page", "href": "https://status.trailercast.io" },
+          { "label": "Changelog", "href": "/changelog" }
+        ]
+      }
+    ]
+  },
+  "search": {
+    "prompt": "Ask anything about TrailerCast..."
+  },
+  "seo": {
+    "metatags": {
+      "og:image": "https://docs.trailercast.io/images/og.png"
+    }
+  }
+}

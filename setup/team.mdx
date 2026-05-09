@@ -1,0 +1,88 @@
+---
+title: "Inviting your team"
+description: "Add teammates, assign roles, and configure permissions."
+icon: "users"
+---
+
+<Note>
+  Find it at: **Settings → Security & Permissions**
+</Note>
+
+## Inviting a teammate
+
+<Steps>
+  <Step title="Click Invite team member">
+    Top right of the Security & Permissions page.
+  </Step>
+
+  <Step title="Enter their email + role">
+    Pick **Admin** or **Member**. You can promote later. Global Admin is always immutable to one person.
+  </Step>
+
+  <Step title="They get an email">
+    One-click signup link that ties them into your company workspace. They land on the same setup flow but skip the company-creation step.
+  </Step>
+</Steps>
+
+<Tip>
+  Invited teammates inherit your tier, you don't need to upgrade their account separately.
+</Tip>
+
+## Roles at a glance
+
+<CardGroup cols={3}>
+  <Card title="Global Admin" icon="crown">
+    One per company, immutable. Has every permission, can transfer the role to a teammate.
+  </Card>
+  <Card title="Admin" icon="user-shield">
+    All permissions ON by default. GA can revoke individual permissions and lock them.
+  </Card>
+  <Card title="Member" icon="user">
+    Curated default-ON set: upload demos, send share links, leave comments.
+  </Card>
+</CardGroup>
+
+See [Roles & Permissions](/roles-and-permissions) for the full breakdown.
+
+## Tier seat limits
+
+| Plan | Seats included |
+|---|---|
+| Starter | 1 |
+| Pro | 5 |
+| Enterprise | Unlimited |
+
+To add more seats, upgrade in **Settings → Billing**.
+
+## Permissions matrix
+
+The Security & Permissions page shows a checkbox grid of every granular permission for every teammate. Hover any row for an explanation of what that permission unlocks.
+
+Common permissions:
+- `demos.upload`, can upload new demos
+- `demos.view_team`, can see other reps' demos
+- `spaces.create`, can create Buyer Spaces
+- `settings.brand_edit`, can change brand settings
+- `team.manage`, can invite + remove teammates
+
+Global Admin can revoke a permission AND lock it, meaning the affected user's matrix shows that row greyed-out and uneditable.
+
+## Transferring Global Admin
+
+If you want to hand off the company to a teammate (sale, role change, vacation):
+
+<Steps>
+  <Step title="Settings → Security & Permissions → Transfer Global Admin">
+    Button only visible if you ARE the Global Admin.
+  </Step>
+  <Step title="Pick the new GA from the dropdown">
+    Must be an existing teammate.
+  </Step>
+  <Step title="Confirm">
+    Transfer is immediate. You become Admin; they become GA.
+  </Step>
+</Steps>
+
+<Warning>
+  Transferring Global Admin is irreversible without the new GA's cooperation. Pick someone you trust.
+</Warning>

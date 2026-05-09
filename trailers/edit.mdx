@@ -1,0 +1,87 @@
+---
+title: "Editing trailers"
+description: "Rebuild with different clips or compose a fully custom trailer."
+icon: "wand-magic-sparkles"
+---
+
+Two ways to change what's in a trailer after it's been generated. Pick based on how much you're changing.
+
+## Rebuild with different clips
+
+Best when the AI's selection is *mostly* right but you want to swap one or two moments.
+
+<Steps>
+  <Step title="Click Rebuild with different clips">
+    Action button under the video on the trailer review page.
+  </Step>
+
+  <Step title="Toggle moments">
+    The modal shows every detected moment as a checkbox, both the ones the AI included and ones it considered but rejected. Toggle them on or off.
+  </Step>
+
+  <Step title="Submit">
+    The trailer recomposes in 1–3 minutes. You'll see a progress panel where the player was.
+  </Step>
+
+  <Step title="Done">
+    The new trailer replaces the old one at the same URL, any share link you've already sent updates automatically.
+  </Step>
+</Steps>
+
+<Tip>
+  Rebuild is non-destructive on the video file, you're just swapping which moments get composed. The original transcript, deal brief, and engagement data stay attached.
+</Tip>
+
+## Build your own trailer (custom clips) {#custom}
+
+Best when you want a fully bespoke cut, different intro, different feature emphasis, A/B test variant.
+
+<Steps>
+  <Step title="Click Build your own trailer">
+    Action button under the video.
+  </Step>
+
+  <Step title="Pick exact start/end timestamps">
+    The modal lets you scrub the source recording and add up to 12 clips with hand-picked in/out points.
+  </Step>
+
+  <Step title="Optional: add a custom narration prompt">
+    "Open with the energy problem, then walk through the integration features, close on pricing.", guides the AI in stitching narration between clips.
+  </Step>
+
+  <Step title="Submit">
+    The AI composes them into a trailer with narration that ties them together. ~2-4 minutes.
+  </Step>
+
+  <Step title="Lands as a NEW demo">
+    The custom trailer doesn't replace the original, it's a new demo row, so you can A/B test different cuts side-by-side.
+  </Step>
+</Steps>
+
+## When to use which
+
+| Situation | Use |
+|---|---|
+| AI picked the wrong feature on slide 4 | Rebuild |
+| Want to swap two moments and add a third | Rebuild |
+| Original trailer is "discovery-heavy", want a "feature-heavy" version | Build your own |
+| Doing an A/B test on cuts | Build your own (creates new demo, original stays intact) |
+| Prospect's CIO asked for a 30-second exec summary | Build your own (cap at 4-5 short clips) |
+
+## Editing narration text directly
+
+Not yet supported. Today the path to changing narration is:
+1. Edit the moment's feature/benefit text in your AI Personalization context, OR
+2. Use Build your own trailer with a custom narration prompt
+
+Direct narration text editing is on the roadmap.
+
+## Re-running the AI summary / deal brief
+
+Re-running the AI after a rebuild is automatic, the new trailer's deal brief regenerates with the new moment set. No separate action needed.
+
+## Reverting a rebuild
+
+There's no explicit revert today. If you rebuilt and don't like the result, you can:
+1. Rebuild again with the original moment selection
+2. Or contact support, we can restore from the previous trailer file if you reach out within a few days
