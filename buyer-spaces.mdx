@@ -43,20 +43,24 @@ You can also create from scratch via **Buyer Spaces → New Space**, but auto-po
 
 ## Section-by-section guide
 
-A typical Space has 4–7 sections:
+A Buyer Space has nine sections. You can hide any section per-Space if it's not relevant for that deal (a small startup deal might skip ROI; a security-conscious enterprise deal might lead with Documents).
 
 <AccordionGroup>
-  <Accordion title="Why We're Here (Discovery)" icon="magnifying-glass">
+  <Accordion title="1. Welcome" icon="hand-wave">
+    Free-text intro at the top of the Space. Use it to greet the evaluation team by name, frame the deal in their words, and set expectations for what they'll find below. One short paragraph beats a wall of text.
+  </Accordion>
+
+  <Accordion title="2. Why We're Here (Discovery)" icon="magnifying-glass">
     Your understanding of the prospect's pain + what they're evaluating against. **Keep concise: 3–5 bullets in their words.** Long discovery sections lose readers.
 
     Auto-populated when you create from a qualifying call.
   </Accordion>
 
-  <Accordion title="The Demo" icon="video">
+  <Accordion title="3. The Demo" icon="video">
     Embed your trailer here. The Buyer Space player has the same color-coded chapter strip as the seller-facing review, prospects can skim straight to what matters to them.
   </Accordion>
 
-  <Accordion title="How We Compare" icon="table-columns">
+  <Accordion title="4. How We Compare" icon="table-columns">
     Comparison table, you vs the alternatives the prospect is considering.
 
     <Tip>
@@ -64,26 +68,38 @@ A typical Space has 4–7 sections:
     </Tip>
   </Accordion>
 
-  <Accordion title="ROI" icon="calculator">
+  <Accordion title="5. ROI" icon="calculator">
     Interactive calculator with their inputs. Customize the formula per Space, typical inputs are team size, current spend, hours saved per rep per week.
 
     Output is formatted as a year-1 / year-2 projection.
   </Accordion>
 
-  <Accordion title="Implementation" icon="list-check">
-    Timeline + onboarding plan. What happens between contract signed and live in production. Prospects love seeing this, it's a buy signal you've thought about.
+  <Accordion title="6. Implementation / Mutual Action Plan (MAP)" icon="list-check">
+    Timeline + onboarding plan, structured as a checklist of action items between your team and theirs. Each action has an owner, a due date, and its own comment thread so back-and-forth on a specific item stays scoped (vs cluttering the main Conversation section). Prospects can check items off as they're done.
   </Accordion>
 
-  <Accordion title="Pricing" icon="tag">
-    Package + cost. Optional, some sellers prefer this in a separate conversation. Set this section to "private" if you want it visible only after the prospect signals high intent.
+  <Accordion title="7. Documents" icon="folder">
+    Upload pricing PDFs, contracts, security questionnaires, decks, case studies, anything else the buying committee needs to review. Drag-and-drop directly into the section.
+
+    **Supported formats:** PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, PNG, JPG, WebP, GIF, TXT, CSV, ZIP. **Max 25MB per file.**
+
+    Files are stored encrypted in R2 with auth-gated download URLs, prospects can only access files inside Spaces they have a valid signed link to. Each download is logged so you see who pulled what.
   </Accordion>
 
-  <Accordion title="Conversation" icon="comments">
+  <Accordion title="8. People / Stakeholders" icon="users">
+    Two-sided ledger:
+    - **Your team** — who from your side is involved (AE, SE, exec sponsor)
+    - **Their evaluation committee** — every stakeholder on the prospect's side, role, decision authority
+
+    Used for routing the right conversation to the right person, and for the seller-side stakeholder map every AE secretly wishes their CRM had.
+  </Accordion>
+
+  <Accordion title="9. Conversation" icon="comments">
     Live threaded chat between your team and theirs. Each prospect-side stakeholder gets a unique signed link to keep their thread separate, but they can see each other's messages and reply collaboratively.
   </Accordion>
 </AccordionGroup>
 
-Each section is editable any time. Changes publish instantly to the live URL, no redeploy.
+Each section is editable any time. Changes publish instantly to the live URL, no redeploy. Use the section visibility toggles in the editor to hide sections that aren't relevant for a specific Space.
 
 ## Publishing + sharing
 
