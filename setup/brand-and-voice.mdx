@@ -10,26 +10,49 @@ icon: "palette"
   Find it at: **Settings → Brand**
 </Note>
 
-Three things to set:
+Brand Settings is where your trailers stop looking like AI output and start looking like your sales material. Set this up once during onboarding and every trailer your team produces from that point forward inherits the same identity, intro slide, transitions, end card, narration tone, music. Skipping this step is the difference between a polished asset prospects share internally and another generic AI doohickey.
 
-<Steps>
-  <Step title="Upload your logo" icon="image">
-    PNG, ideally 1024×1024 or larger, transparent background. Used on:
-    - The share-page header your prospects see
-    - Trailer end cards
-    - As a watermark on free-tier trailers
-  </Step>
+### Brand identity essentials
 
-  <Step title="Set your primary color" icon="paintbrush">
-    Hex code (e.g. `#0891b2`). Used as the accent color on share pages and Buyer Spaces.
-  </Step>
+<CardGroup cols={2}>
+  <Card title="Logo" icon="image">
+    PNG, ideally 1024×1024 or larger, transparent background. Used on the share-page header, trailer end cards, and as a watermark on free-tier trailers.
+  </Card>
+  <Card title="Primary color" icon="paintbrush">
+    Hex code (e.g. `#0891b2`). The accent color on share pages and Buyer Spaces.
+  </Card>
+  <Card title="Secondary color" icon="droplet">
+    Hex code. Used for text overlays, transition tints, and lower-third backgrounds so trailers feel multi-toned instead of monochromatic.
+  </Card>
+  <Card title="Company name" icon="building">
+    How it appears on share pages and in narration when the AI references "your team."
+  </Card>
+  <Card title="Brand font" icon="font">
+    Optional Google Font name (e.g. "Inter", "Montserrat"). Applied to text overlays, agenda slide, lower-thirds, and end cards. Falls back to a clean sans-serif if not specified.
+  </Card>
+</CardGroup>
 
-  <Step title="Set company name display" icon="building">
-    How it appears on share pages.
-  </Step>
-</Steps>
+### Trailer composition assets
 
-These settings make every trailer feel like part of *your* brand, not a generic template.
+These get baked into every trailer the moment you upload them. The AI reuses them automatically, no per-trailer setup.
+
+| Asset | What it is | Where it appears |
+|---|---|---|
+| **Intro slide** | Optional opening frame (3–5 seconds) | First frame of every trailer |
+| **Outro / end card** | Optional closing frame with logo + CTA | Last frame of every trailer |
+| **Agenda slide** | Auto-populated with the chapter list for THIS trailer | After the intro slide, sets expectations |
+| **Transition slides** | Brief 0.5–1s slides between chapters | Between every clip in the trailer |
+| **Lower-third graphic** | Overlay with chapter title and speaker name | Bottom of frame during clips |
+| **Background music** | Optional soft track underlying narration | Throughout the trailer |
+| **Trailer template** | Locks the order: intro → agenda → clips → outro | Applied to every composed trailer |
+
+<Tip>
+  **Why this matters**: prospects can't tell the trailer was AI-generated. It looks like your team spent a day in After Effects on each one. The AI does the picking and the composition; the brand assets are the difference between "obviously made by software" and "made by your team, polished by software."
+</Tip>
+
+### Updating brand assets later
+
+Re-uploads only apply to **future** trailers. To backfill an updated brand into existing trailers, use **Rebuild with different clips** on each demo, the rebuild step uses your current brand assets, not the ones at original-build time.
 
 ## Voice cloning
 
