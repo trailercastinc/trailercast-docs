@@ -1,0 +1,132 @@
+---
+title: "Library"
+description: "Company-wide pool of reusable sales assets — decks, PDFs, case studies, pricing, battlecards, customer stories. Reps pull from the Library into any Decision Room with one click."
+icon: "book-open"
+---
+
+The **Library** is your company's single source of truth for sales content. Every reusable asset — pitch decks, pricing sheets, security questionnaires, legal templates, battlecards, customer case studies, ROI one-pagers — lives in one place. Reps browse the Library and attach assets to any Decision Room without re-uploading. Marketing updates the pricing deck once, every active Space gets the new version automatically.
+
+## When to use the Library vs uploading directly to a Space
+
+| Scenario | Use Library | Upload directly to Space |
+|---|---|---|
+| Pricing deck reused across every deal | ✅ | |
+| Security questionnaire response (canonical) | ✅ | |
+| Customer case studies | ✅ | |
+| Battlecards, competitive positioning | ✅ | |
+| Legal templates (MSA, DPA, NDA) | ✅ | |
+| Custom one-page proposal for THIS deal | | ✅ |
+| Signed NDA from THIS prospect | | ✅ |
+| Custom security questionnaire response with prospect-specific edits | | ✅ |
+
+Rule of thumb: if more than one deal will use it, it belongs in the Library.
+
+## Asset types
+
+The Library has eight types. Choose the closest match at upload — type drives a few automated behaviors (e.g., `case_study` assets land in the Customer Stories section of a Decision Room when attached).
+
+| Type | Examples |
+|---|---|
+| **Case study** | Customer success stories, win narratives |
+| **Deck** | Pitch deck, capability overview, demo deck |
+| **Pricing** | Rate cards, package comparison, discount sheet |
+| **Security** | SOC 2 evidence, security questionnaire responses, infosec one-pager |
+| **Legal** | MSA template, DPA, NDA, BAA |
+| **Battlecard** | Competitor positioning, objection handling guide |
+| **One-pager** | ROI calculator, executive summary, integration architecture |
+| **Other** | Anything that doesn't fit above |
+
+You can also add free-form tags (`enterprise`, `q3-2026`, `late-stage`) for finer filtering.
+
+## Uploading an asset (admin only)
+
+<Steps>
+  <Step title="Go to Library → Upload asset">
+    Top-right of the Library phase. Admin role required.
+  </Step>
+  <Step title="Pick the file + fill the form">
+    Title, type, optional description, tags, visibility (Everyone vs Admins only), optional relevant industries + use cases (these power the "Suggested for this Space" feature).
+  </Step>
+  <Step title="Upload">
+    The asset is now version 1. Reps can attach it to any Decision Room immediately.
+  </Step>
+</Steps>
+
+**Supported formats:** PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, PNG, JPG, WebP, GIF, TXT, CSV, ZIP. **Max 25 MB.**
+
+## Versioning (V2)
+
+Every asset has a version history. When marketing updates the pricing deck, admins click into the asset → **Upload new version** → optionally add a change note ("Updated Q3 pricing"). The asset's `currentVersion` increments; every Decision Room using the asset sees the new version on next download.
+
+### Pinning a version
+
+By default, attached library assets are **always-latest**. The Documents tab in a Decision Room shows a **"From Library"** badge — meaning this row tracks the asset's current version.
+
+If you want to lock a Space to a specific version (e.g., you negotiated a contract against MSA template v2 and don't want it changing under you), pass the `libraryAssetVersion` parameter when attaching via the API. The badge changes to **"Library · v2"** to indicate the pin. Future asset updates won't propagate.
+
+V1 attaches always-latest by default; explicit pin is V3 of the UX.
+
+## Visibility (V2)
+
+Each asset has a visibility flag set at upload:
+
+- **Everyone** (default): all members can see it in browse + attach to their Spaces.
+- **Admins only**: hidden from members in the browse view AND the Browse Library modal inside Decision Rooms. Useful for early drafts, sensitive enterprise pricing, or assets still in legal review.
+
+Admins always see everything (including archived assets via the "Show archived" toggle).
+
+## "AI picks for this deal"
+
+When a rep clicks **Browse Library** inside a Decision Room, the modal surfaces three sections:
+
+1. **AI picks for this deal** (top 3-5, purple-highlighted) — Claude Sonnet 4.5 ranks the library against THIS Buyer Space using the full context: prospect company, industry, deal stage, discovery summary, welcome message, stakeholder ledger, and the most recent linked demo's structured AI summary (pain points, objections, decisions). Each pick comes with a one-sentence reasoning ("Recommended because Acme is in healthcare and asked for HIPAA evidence in the discovery call — this is the ProHealth case study").
+2. **Other matches** — Postgres full-text search hits the AI missed (matches asset title + description + tags + relevant_industries against the Space's discovery + industry). Cheap fallback for close matches the model was conservative on.
+3. **Everything else** — full library, filtered by type or search.
+
+If the AI call fails (rare — Anthropic outage, transient parse issue), the modal silently falls back to the FTS-only section. Sellers always see something useful.
+
+If the Space has no discovery summary or stakeholders yet (brand new Space), AI picks may be empty — the model returns nothing rather than guessing. Fill in the discovery + people fields and re-open the modal to get richer picks.
+
+### Cost
+
+AI suggestion runs once per Browse modal open at ~$0.05 per call (logged in your cost analysis under `library_ai_suggest`). Reps who open the modal 10x/day land at ~$0.50/rep/day.
+
+### Making your assets more discoverable
+
+To improve both the AI's reasoning AND the FTS fallback, fill in these fields at upload:
+
+- **Relevant industries** (multi-select): `saas, healthcare, fintech, manufacturing, retail`
+- **Relevant use cases** (multi-select): `enterprise-deal, security-review, late-stage, expansion, pilot`
+- **Description** — a sentence or two explaining when to use this asset (the AI reads this verbatim)
+- **Tags** — free-form, comma-separated; both the AI and FTS index them
+
+## Attaching to a Decision Room
+
+<Steps>
+  <Step title="Open the Decision Room → Documents tab">
+    Either from your dashboard or from the qualifying call → Create Space flow.
+  </Step>
+  <Step title="Click Browse Library">
+    Top of the Documents section, next to **Upload document**.
+  </Step>
+  <Step title="Pick assets — multi-select">
+    The Suggested section is pinned to the top. Filter by type or search to find what you need. Click rows to add a checkmark.
+  </Step>
+  <Step title="Click Add N to Space">
+    All selected assets attach in one click. They appear in the Documents list with a **"From Library"** badge.
+  </Step>
+</Steps>
+
+## Archiving (admin only)
+
+Archive an asset when it's outdated but still referenced by old Decision Rooms. Open the asset → **Archive**. The asset:
+
+- Disappears from browse + the Browse Library modal
+- Existing attachments keep working (downloads still serve from R2)
+- Can be restored any time via the **Show archived** toggle in Library
+
+We don't hard-delete. Marketing can ship a new version instead of deleting and re-uploading.
+
+## Engagement aggregation (V3 — coming soon)
+
+Per-asset stats: "this deck has been attached 47 times across 12 Spaces, viewed by prospects 132 times, average time-on-page 4m 22s". Designed, not yet shipped.

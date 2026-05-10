@@ -43,7 +43,7 @@ You can also create from scratch via **Buyer Spaces → New Space**, but auto-po
 
 ## Section-by-section guide
 
-A Buyer Space has nine sections. You can hide any section per-Space if it's not relevant for that deal (a small startup deal might skip ROI; a security-conscious enterprise deal might lead with Documents).
+A Buyer Space has nine prospect-facing sections plus one internal-only section (the Handoff Brief, below). You can hide any prospect-facing section per-Space if it's not relevant for that deal (a small startup deal might skip ROI; a security-conscious enterprise deal might lead with Documents).
 
 <AccordionGroup>
   <Accordion title="1. Welcome" icon="hand-wave">
@@ -84,6 +84,8 @@ A Buyer Space has nine sections. You can hide any section per-Space if it's not 
     **Supported formats:** PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, PNG, JPG, WebP, GIF, TXT, CSV, ZIP. **Max 25MB per file.**
 
     Files are stored encrypted in R2 with auth-gated download URLs, prospects can only access files inside Spaces they have a valid signed link to. Each download is logged so you see who pulled what.
+
+    **External contract tracking (DocuSign V1).** The Documents tab also tracks contracts signed externally via DocuSign. Paste an envelope ID into the "Track contract" form and you'll see real-time engagement: per-recipient view + signature status, time-to-first-view, "X hours since first view, not yet signed", and a full event audit log. When the envelope completes, the Space auto-flips to **Won** and the **Sales Handoff Brief auto-fires** for the implementation team. Setup is one-time per company in Settings → Integrations → eSignature tracking. PandaDoc / HelloSign / Adobe Sign are roadmapped.
   </Accordion>
 
   <Accordion title="8. People / Stakeholders" icon="users">
@@ -100,6 +102,33 @@ A Buyer Space has nine sections. You can hide any section per-Space if it's not 
 </AccordionGroup>
 
 Each section is editable any time. Changes publish instantly to the live URL, no redeploy. Use the section visibility toggles in the editor to hide sections that aren't relevant for a specific Space.
+
+## Sales Handoff Brief (internal only)
+
+A one-page AI-generated artifact for the implementation / customer success team when a deal closes. Lives as the **Handoff Brief** tab in the Buyer Space sidebar. The prospect never sees this section.
+
+The brief distills every linked recording's transcript, AI summary, and deal brief, plus the Buyer Space welcome + discovery sections, the People ledger (both sides), MAP commitments, and the ROI inputs into structured JSON the post-sales lead can scan in 90 seconds.
+
+**What it produces:**
+
+- Headline (one sentence: who you sold to, their primary problem)
+- Customer profile (industry, primary use case, team size estimate)
+- Deal summary (tier, seats, estimated ARR, won-at, contract term)
+- Stakeholders (champion, economic buyer, evaluation committee, your team)
+- Why they bought (pain points in their words)
+- Success criteria (what they said they'd measure you on)
+- Promises made (specific commitments with owner + deadline where stated)
+- Risk flags (concerns raised but not fully resolved)
+- Implementation expectations (go-live target, key dates, kickoff prerequisites)
+- Key recordings (3–6 most relevant, one-line headline each)
+- Next actions (concrete first-week tasks for implementation)
+- Implementation lead's mental model (qualitative paragraph capturing political reality the structured fields miss)
+
+**How to generate:** open the Buyer Space, click **Handoff Brief** in the sidebar, click **Generate brief**. Takes ~10–20 seconds. Regenerate any time after adding new recordings or context, the latest version overwrites the prior one.
+
+**How to download as PDF:** once a brief is generated, click **Download PDF** in the header strip above the brief. The PDF is a Letter-format printable version with the same content as the on-screen render, suitable for emailing the implementation team, attaching to a CRM record, or pinning into Slack.
+
+V1 is manual. V2 will auto-fire when an eSignature envelope completes (eSign tracking ships next).
 
 ## Publishing + sharing
 

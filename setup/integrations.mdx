@@ -68,10 +68,52 @@ Sync deals + contacts so trailers and Buyer Spaces tie to opportunities in your 
 - **Deals / Opportunities**, link trailers to specific deal records
 - **Activity**, when a prospect engages with a trailer, log it on the deal timeline
 
+## eSignature tracking (DocuSign V1)
+
+TrailerCast doesn't sign anything. It WATCHES contracts signed externally via DocuSign Connect, records signature events, surfaces engagement metrics on the Buyer Space Documents tab, and uses "envelope completed" as the trigger to auto-flip the Space to **Won** and auto-fire the **Sales Handoff Brief** for the implementation team.
+
+### One-time setup (admin-only)
+
+<Steps>
+  <Step title="Open DocuSign Admin → Connect">
+    From your DocuSign admin console, navigate to **Connect** in the integrations sidebar, then **Add Configuration** → **Custom**.
+  </Step>
+
+  <Step title="Paste the TrailerCast webhook URL">
+    Go to TrailerCast → Settings → Integrations → eSignature tracking → DocuSign. Copy the webhook URL shown there (looks like `https://.../api/webhooks/esign/docusign?company=<id>`) and paste it into DocuSign's URL field.
+  </Step>
+
+  <Step title="Configure events + authentication">
+    - **Events to send**: Envelope-Sent, Envelope-Delivered, Envelope-Completed, Envelope-Declined, Envelope-Voided, Recipient-Sent, Recipient-Delivered, Recipient-Completed.
+    - **Format**: JSON.
+    - **Authentication**: HMAC. DocuSign generates a secret and shows it once.
+  </Step>
+
+  <Step title="Paste the secret back into TrailerCast">
+    Copy the HMAC secret from DocuSign and paste it into TrailerCast's **DocuSign HMAC secret** field. Click **Connect**. From this point, every envelope event from your DocuSign account is verified and processed by TrailerCast.
+  </Step>
+</Steps>
+
+### Per-deal usage
+
+For each deal where you want contract tracking:
+
+1. Open the Buyer Space → **Documents** tab
+2. Click **Track contract** at the bottom
+3. Paste the envelope ID from DocuSign (Manage → Envelope details)
+4. Optionally add a subject (auto-pulled from DocuSign once the first webhook fires)
+
+You'll see real-time status (Sent / Delivered / Viewed / Partially signed / Completed), per-recipient engagement, and a full event audit log. When the envelope completes, the Space auto-flips to **Won** and the Handoff Brief auto-fires.
+
+### Other eSignature vendors
+
+PandaDoc, HelloSign / Dropbox Sign, and Adobe Sign are designed and on the roadmap (~2-3 days each to add against the same schema once we have a customer asking). [Email us](mailto:hello@trailercast.io) if you need one prioritized.
+
 ## What's NOT integrated yet
 
 - Outlook (planned)
 - Zoom Direct (planned, today's flow uses Recall.ai which works with Zoom but isn't a first-class native integration)
 - Outreach / Salesloft (planned)
+- PandaDoc / HelloSign / Adobe Sign for eSignature (planned, see above)
 
 If a missing integration is a blocker, [email us](mailto:hello@trailercast.io), these get prioritized by customer demand.

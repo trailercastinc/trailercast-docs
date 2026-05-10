@@ -10,6 +10,67 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-05-09 (late)" description="Sales Library shipped (V1+V2 together)">
+
+### New
+
+- **Sales Library** — a new top-level **Library** phase in the left sidebar. Company-wide pool of reusable sales assets (decks, PDFs, case studies, pricing, security questionnaires, legal templates, battlecards, one-pagers). Admins upload + curate; every rep can browse and attach assets to any Decision Room with one click. Eight asset types, free-form tags, full-text search. Distinct from the "Trailers" phase (which is the per-rep list of trailer videos).
+- **Versioning + always-latest by default.** When marketing uploads a new version of the pricing deck, every Decision Room using it sees the new version on next download — no re-attach needed. Reps who want a specific version sticky can pin when attaching; the Documents tab shows a "Library · v2" badge on pinned rows vs "From Library" on always-latest rows.
+- **Suggested for this Space.** When a rep clicks "Browse Library" inside a Decision Room, the modal pins the top 3-5 most relevant assets at the top, ranked by Postgres full-text search against the Space's discovery + prospect industry. No AI call, no cost, deterministic.
+- **Visibility gating.** Admins can mark an asset "Admins only" at upload — hidden from members in browse + the Browse modal.
+- **Version history on every asset.** Detail panel shows every uploaded version with change notes + uploader; admins can download any historical version.
+
+### Coming next (still on the radar)
+
+- **AI-ranked suggestions** — shipped same day, see the entry above.
+- **Per-asset comments / approvals** — internal team threading on the asset itself ("Marketing, can you update slide 12?"). V3.
+- **Engagement aggregation across Spaces** — "this deck has been viewed 47 times in 12 Spaces, here's the avg time-on-page". V3.
+
+</Update>
+
+---
+
+<Update label="Week of 2026-05-09 (late + 1)" description="AI library suggestions + docs branding refresh">
+
+### New
+
+- **AI picks for this deal.** When a rep clicks "Browse Library" inside a Decision Room, the modal now opens with a Claude-ranked top 3-5 assets — each with a one-sentence reasoning ("Recommended because Acme is in healthcare and asked for HIPAA evidence — this is the ProHealth case study"). The AI reads the prospect's industry, discovery summary, welcome message, stakeholders, and the most recent linked demo's call summary, then ranks the library against THIS specific deal. Postgres full-text search still surfaces close matches the AI was conservative on, in a secondary "Other matches" section. Cost: ~$0.05 per Browse modal open, logged under `library_ai_suggest`. Fails silently to FTS-only if the AI call errors.
+- **TrailerCast logo on docs.trailercast.io.** Replaces the Mintlify default with our purple-target mark + wordmark in the top-left. Light + dark variants. Favicon also branded.
+
+</Update>
+
+---
+
+<Update label="Week of 2026-05-09 (mid-week)" description="eSignature tracking shipped (DocuSign V1)">
+
+### New
+
+- **eSignature tracking — DocuSign V1.** TrailerCast now watches contracts signed externally via DocuSign Connect. Paste an envelope ID into the Buyer Space Documents tab and you'll see real-time engagement: who viewed when, "X hours since first view, not yet signed", per-recipient signature status, and a full event audit log. When the envelope completes, the Space auto-flips to **Won** and the **Sales Handoff Brief auto-fires** for the implementation team. Setup is one-time (admin-only): Settings → Integrations → eSignature tracking → paste the HMAC secret from DocuSign Admin → Connect.
+- **Per-vendor adapter pattern.** Backend is structured so PandaDoc / HelloSign / Adobe Sign drop in against the same schema. DocuSign first because it's ~70% of B2B eSign volume + has the most mature webhook system.
+
+### Coming next
+
+- **PandaDoc / HelloSign / Adobe Sign adapters** — same engagement UI, different vendor wiring. ~2-3 days each once we have a customer asking.
+- **OAuth-connected DocuSign** — auto-discover envelopes instead of pasting envelope IDs. V2.
+
+</Update>
+
+---
+
+<Update label="Week of 2026-05-09" description="Sales Handoff Brief shipped">
+
+### New
+
+- **Sales Handoff Brief** — a new internal-only tab inside every Buyer Space. One click compresses every linked recording, the People ledger, MAP commitments, and ROI inputs into a structured one-page brief the implementation team can read in 90 seconds. Built specifically for the moment a deal closes and you're handing the customer to onboarding or CS. Generate from **Buyer Space → Handoff Brief → Generate brief**. Regenerate any time. The brief is stored, so re-opening the tab is instant. **Download PDF** button exports the brief as a Letter-format printable for emailing the implementation team or attaching to a CRM record. See [Buyer Spaces → Sales Handoff Brief](/buyer-spaces#sales-handoff-brief-internal-only) for the full field list.
+
+### Coming next
+
+- **eSignature tracking (DocuSign first)** — webhook-based engagement tracking for contracts signed externally. When an envelope completes, the Buyer Space auto-flips to "Won" and the Handoff Brief auto-fires. Designed and spec'd; build starts now.
+
+</Update>
+
+---
+
 <Update label="Week of 2026-05-05" description="Trailer review rebuild, AI personalization, expanded comments + Ask Winter">
 
 ### New
