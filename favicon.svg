@@ -1,19 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <!-- TrailerCast broadcast / target mark on a rounded purple gradient.
-       Mark inset slightly (r=14 vs the in-app r=20) so it reads cleanly at
-       16x16 in the browser tab. Matches frontend/public/favicon.svg so the
-       app + docs share an identical tab icon. -->
-  <defs>
-    <linearGradient id="tc-fav" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7c7df3"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" rx="10" fill="url(#tc-fav)"/>
-  <circle cx="24" cy="24" r="14" stroke="#ffffff" stroke-width="2.25" fill="none"/>
-  <circle cx="24" cy="24" r="5" fill="#ffffff"/>
-  <path d="M24 6 L24 11" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round"/>
-  <path d="M24 37 L24 42" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round"/>
-  <path d="M6 24 L11 24" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round"/>
-  <path d="M37 24 L42 24" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round"/>
+  <!-- TrailerCast target / reticle mark on a flat lavender-purple
+       rounded square. Matches the light/dark logo lockups in
+       /logo/{light,dark}.svg. The mark is slightly inset (r=14 vs
+       the in-app r=20) so it reads cleanly at 16x16 in the browser
+       tab bar — the full-size mark would touch the corners and
+       lose its silhouette when downscaled. Spoke ticks span across
+       the outer ring (outside through to the area between ring and
+       inner dot), matching the source art. -->
+  <rect width="48" height="48" rx="10" fill="#8e87f0"/>
+  <circle cx="24" cy="24" r="14" stroke="#ffffff" stroke-width="2.4" fill="none"/>
+  <circle cx="24" cy="24" r="3.6" fill="#ffffff"/>
+  <path d="M24 7 L24 17" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M24 31 L24 41" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M7 24 L17 24" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M31 24 L41 24" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
 </svg>

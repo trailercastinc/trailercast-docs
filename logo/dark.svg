@@ -1,22 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 90" width="360" height="90">
   <!-- TrailerCast lockup — dark mode (white wordmark on dark backgrounds).
-       Same purple-gradient mark; only the wordmark color changes so the
-       icon stays high-contrast against either theme. -->
-  <defs>
-    <linearGradient id="tc-bg-dark" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7c7df3"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
+       Same flat-purple mark as light.svg; only the wordmark color
+       changes so the icon stays high-contrast against either theme. -->
 
   <!-- Mark -->
-  <rect x="4" y="4" width="82" height="82" rx="20" fill="url(#tc-bg-dark)"/>
-  <circle cx="45" cy="45" r="22" stroke="#ffffff" stroke-width="3.5" fill="none"/>
-  <circle cx="45" cy="45" r="8" fill="#ffffff"/>
-  <path d="M45 12 L45 22" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M45 68 L45 78" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M12 45 L22 45" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M68 45 L78 45" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <rect x="4" y="4" width="82" height="82" rx="20" fill="#8e87f0"/>
+  <circle cx="45" cy="45" r="23" stroke="#ffffff" stroke-width="3.6" fill="none"/>
+  <circle cx="45" cy="45" r="6" fill="#ffffff"/>
+  <path d="M45 14 L45 32" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M45 58 L45 76" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M14 45 L32 45" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M58 45 L76 45" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
 
   <!-- Wordmark + TM (white for dark mode) -->
   <text x="106" y="62"

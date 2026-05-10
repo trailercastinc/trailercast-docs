@@ -1,23 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 90" width="360" height="90">
   <!-- TrailerCast lockup — light mode (dark wordmark on light backgrounds).
-       Mark on the left = purple gradient rounded square with white target /
-       crosshair. Wordmark "TrailerCast" + superscript TM beside it. Designed
-       to read at the typical Mintlify nav height (~36px) without crowding. -->
-  <defs>
-    <linearGradient id="tc-bg-light" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7c7df3"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
+       Mark = flat lavender-purple rounded square with the white
+       target / crosshair reticle: outer ring, inner filled dot, and
+       4 spoke ticks that span across the ring at the cardinal points
+       (extending from outside the ring through to the area between
+       the ring and the inner dot). Wordmark "TrailerCast" + a
+       superscript TM. Designed to read at the typical Mintlify nav
+       height (~36px) without crowding. -->
 
-  <!-- Mark -->
-  <rect x="4" y="4" width="82" height="82" rx="20" fill="url(#tc-bg-light)"/>
-  <circle cx="45" cy="45" r="22" stroke="#ffffff" stroke-width="3.5" fill="none"/>
-  <circle cx="45" cy="45" r="8" fill="#ffffff"/>
-  <path d="M45 12 L45 22" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M45 68 L45 78" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M12 45 L22 45" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M68 45 L78 45" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Mark: flat purple square (no gradient — matches the wordmark
+       art Daniel attached). #8e87f0 ≈ Tailwind indigo-400 / lavender. -->
+  <rect x="4" y="4" width="82" height="82" rx="20" fill="#8e87f0"/>
+
+  <!-- Outer ring -->
+  <circle cx="45" cy="45" r="23" stroke="#ffffff" stroke-width="3.6" fill="none"/>
+
+  <!-- Inner filled dot — smaller than the previous draft so the
+       ratio matches the source art. -->
+  <circle cx="45" cy="45" r="6" fill="#ffffff"/>
+
+  <!-- 4 spoke ticks. Each one spans the outer ring at a cardinal
+       point: ~8 units outside the ring + ~9 units inside, with a
+       gap remaining between the tick's inner end and the central
+       dot (so the dot reads as a separate element). -->
+  <path d="M45 14 L45 32" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M45 58 L45 76" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M14 45 L32 45" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M58 45 L76 45" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
 
   <!-- Wordmark + TM -->
   <text x="106" y="62"
