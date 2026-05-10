@@ -73,6 +73,54 @@ icon: "video"
     </Tip>
   </Tab>
 
+  <Tab title="Record in the browser">
+    Record a screen + camera trailer directly in TrailerCast — no Zoom, no Loom, no upload step. Lands as a normal trailer ready to share or attach to Decision Rooms.
+
+    <Steps>
+      <Step title="Open the recording modal">
+        From **Trailers** → click the **+ New trailer ▾** dropdown → **Record new trailer**.
+      </Step>
+
+      <Step title="Pick a layout">
+        - **Screen + camera (PiP)** — screen recording with your webcam in a circle, bottom-right corner.
+        - **Screen only** — just the screen, no webcam.
+        - **Camera only** — just your webcam, no screen.
+
+        Mic is on by default. Toggle off if you want a silent walkthrough.
+      </Step>
+
+      <Step title="Click Start recording">
+        Your browser asks for screen + camera + mic permissions. Approve them. The recording starts; a red dot + timer shows in the modal, and your browser's omnibox shows a "Sharing your screen" indicator.
+      </Step>
+
+      <Step title="Pause / resume / stop">
+        Up to 15 minutes per recording. We show a soft warning at 10 minutes ("getting long, want to save and start a new clip?") and auto-stop at 15.
+      </Step>
+
+      <Step title="Preview, then save">
+        Play it back. If you fluffed it, **Discard + record again**. If it's good, **Save as trailer**. The recording uploads to your trailers and appears in the list immediately — no AI processing wait.
+      </Step>
+    </Steps>
+
+    ### What's different from uploaded recordings
+
+    Browser-recorded trailers **skip the AI pipeline**. The recording is treated as the final trailer — no transcription, no moment detection, no auto-built highlight reel. Use this when:
+
+    - You already know exactly what you want to record (60-90 seconds is the sweet spot)
+    - You want to ship NOW, not wait 5-10 minutes for AI processing
+    - The recording is a personalized intro / nurture clip / async update, not a long demo
+    - You want a polished short clip you can attach to Decision Rooms or send via per-recipient share links
+
+    For long-form demo walkthroughs that benefit from AI moment detection (the auto-built 90-second highlight reel), upload them through the **Upload existing recording** flow instead.
+
+    ### Browser support
+
+    Works on Chrome, Edge, Firefox, and Safari on desktop. **iOS Safari does NOT support screen capture** — Apple blocks it. The modal shows a "desktop only" notice on iPhone/iPad.
+
+    ### Coming soon
+
+    Per-prospect personalization layers (record a short webcam intro stuck on top of any existing trailer, one per stakeholder), branded intro/outro slide auto-composition for recorded clips, and playlist composition (multi-clip stitched sequence with AI narration on transitions). All designed; build incrementally based on usage.
+  </Tab>
   <Tab title="Manual bot (one-off)">
     For one-off calls that don't match your auto-schedule rules, say a partner sync you want recorded for review.
 
