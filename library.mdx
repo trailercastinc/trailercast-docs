@@ -92,13 +92,10 @@ If the AI call fails (rare — Anthropic outage, transient parse issue), the mod
 
 If the Space has no discovery summary or linked demos yet, AI picks may be empty — the model returns nothing rather than guessing. Fill in the discovery + people fields, then click Refresh.
 
-### Cost
+### Caching
 
-- Browse modal opens are **always free** (FTS + cached AI reads).
-- Each explicit "Ask AI to rank" or "Refresh" click costs ~$0.05, logged in your cost analysis under `library_ai_suggest`.
-- Repeat clicks on the same Space's modal are free (cache hits) until the rep manually refreshes.
-
-Typical power-user daily cost: $0.05–$0.15 — only paid for Spaces where the rep actually wants AI help.
+- Browse modal opens reuse the previous AI ranking instantly — repeat opens of the same Space's modal don't re-run the AI.
+- Click **Refresh** to re-run the AI after adding new library assets, updating discovery, or attaching new demos.
 
 ### Making your assets more discoverable
 
