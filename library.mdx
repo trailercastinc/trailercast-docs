@@ -75,21 +75,30 @@ Each asset has a visibility flag set at upload:
 
 Admins always see everything (including archived assets via the "Show archived" toggle).
 
-## "AI picks for this deal"
+## "AI picks for this deal" (opt-in)
 
-When a rep clicks **Browse Library** inside a Decision Room, the modal surfaces three sections:
+When a rep clicks **Browse Library** inside a Decision Room, the modal opens with **two free sections** by default:
 
-1. **AI picks for this deal** (top 3-5, purple-highlighted) — Claude Sonnet 4.5 ranks the library against THIS Buyer Space using the full context: prospect company, industry, deal stage, discovery summary, welcome message, stakeholder ledger, and the most recent linked demo's structured AI summary (pain points, objections, decisions). Each pick comes with a one-sentence reasoning ("Recommended because Acme is in healthcare and asked for HIPAA evidence in the discovery call — this is the ProHealth case study").
-2. **Other matches** — Postgres full-text search hits the AI missed (matches asset title + description + tags + relevant_industries against the Space's discovery + industry). Cheap fallback for close matches the model was conservative on.
-3. **Everything else** — full library, filtered by type or search.
+1. **Other matches** — Postgres full-text search results (asset title + description + tags + relevant_industries vs the Space's discovery + industry). No AI cost.
+2. **Everything else** — the full library with type / search filters.
 
-If the AI call fails (rare — Anthropic outage, transient parse issue), the modal silently falls back to the FTS-only section. Sellers always see something useful.
+A third **AI picks for this deal** section is **opt-in**. The rep clicks "Ask AI to rank" — Claude Sonnet 4.5 reads the Space's full context (prospect company, industry, deal stage, discovery summary, welcome message, stakeholder ledger, and the most recent linked demo's structured AI summary including pain points and objections) and ranks the library catalog against it, returning the top picks with a one-sentence reasoning each:
 
-If the Space has no discovery summary or stakeholders yet (brand new Space), AI picks may be empty — the model returns nothing rather than guessing. Fill in the discovery + people fields and re-open the modal to get richer picks.
+> *"Recommended because Acme is in healthcare and asked for HIPAA evidence in the discovery call — this is the ProHealth case study."*
+
+The result is **cached per Space** so subsequent modal opens of the same Space render the AI ranking instantly without re-running the model. A **Refresh** button next to the AI section lets the rep re-run after adding discovery context, attaching a new demo, or shifting the deal stage.
+
+If the AI call fails (rare — Anthropic outage, transient parse issue), the modal shows an inline "couldn't reach the AI" hint and the rest of the modal keeps working.
+
+If the Space has no discovery summary or linked demos yet, AI picks may be empty — the model returns nothing rather than guessing. Fill in the discovery + people fields, then click Refresh.
 
 ### Cost
 
-AI suggestion runs once per Browse modal open at ~$0.05 per call (logged in your cost analysis under `library_ai_suggest`). Reps who open the modal 10x/day land at ~$0.50/rep/day.
+- Browse modal opens are **always free** (FTS + cached AI reads).
+- Each explicit "Ask AI to rank" or "Refresh" click costs ~$0.05, logged in your cost analysis under `library_ai_suggest`.
+- Repeat clicks on the same Space's modal are free (cache hits) until the rep manually refreshes.
+
+Typical power-user daily cost: $0.05–$0.15 — only paid for Spaces where the rep actually wants AI help.
 
 ### Making your assets more discoverable
 
