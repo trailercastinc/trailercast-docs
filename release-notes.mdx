@@ -10,6 +10,24 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-05-10" description="QBR Briefs shipped">
+
+### New
+
+- **QBR Briefs** — auto-generated quarterly business review prep, per rep. New **QBR Briefs** tab in the left sidebar. Sellers pick a date range (last 30/60/90 days or 6 months — or custom), click Generate, and get an eight-section AI-synthesized rollup of every closed-won, closed-lost, and in-pipeline deal in the window: quarter stats, wins with transferable lessons, losses with honest reasons, active pipeline by stage, at-risk deals with rescue plans, patterns across deals, conversational talking points, and the manager's likely hard questions with preempts. Read it in the detail view, present from it during the meeting via the **Presenter mode** (full-screen click-through, arrow-key navigation), or export to PDF. ~$0.30-0.50 per generation on Sonnet 4.5; cached and re-generatable. Saves a typical seller 2-4 hours of QBR prep per quarter.
+- **Cross-rep access for admins.** Managers / admins can read any teammate's QBR brief in their company (audit-logged) without the rep having to email it. Useful for pre-meeting context or coaching prep.
+- **Per-section edits survive regeneration.** Sellers can hand-edit any AI-generated section; edits live in a separate `overrides_json` field and are merged at read time. Re-running the brief after adding new deals doesn't trash manual corrections.
+
+### Coming next
+
+- **Manager team rollup** — same brief shape, but aggregating N reps into one team brief. Designed; building when first asked.
+- **Auto-generation on quarter-close** — Q1/Q2/Q3/Q4 cron + email-the-rep notification.
+- **Slide export** (PowerPoint / Google Slides). Hold for now — early testers say Presenter mode is more useful than slides.
+
+</Update>
+
+---
+
 <Update label="Week of 2026-05-09 (late)" description="Sales Library shipped (V1+V2 together)">
 
 ### New

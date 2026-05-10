@@ -1,0 +1,93 @@
+---
+title: "QBR Briefs"
+description: "AI-generated quarterly business review prep — eight sections, picked date range, in 30 seconds. Saves sellers 2-4 hours per quarter."
+icon: "file-chart-column"
+---
+
+QBRs (Quarterly Business Reviews) are the internal meeting where sellers walk their manager through everything that happened across their deals in the last quarter. Most reps spend 2-4 hours per quarter manually gathering data they already have in fragments — closed deals, pipeline status, lost deals to explain, lessons learned, talking points to memorize.
+
+The QBR Brief is TrailerCast's AI-generated rollup that does the gathering, synthesis, and prep in 30 seconds.
+
+## What's in a brief
+
+Every brief is one rep, one date range, eight sections. All sections auto-generate from the rep's Buyer Spaces, recordings, transcripts, and Handoff Briefs.
+
+<AccordionGroup>
+  <Accordion title="1. Quarter at a glance" icon="chart-column">
+    Closed-won / closed-lost / in-pipeline counts, ARR booked, win rate, average deal size, and a one-line comparison vs the prior period. Numbers come from buyer_spaces.closed_at falling in the selected window — never an AI guess.
+  </Accordion>
+
+  <Accordion title="2. Wins" icon="trophy">
+    3-5 closed-won deals featured. Per deal: deal value, close date, "why we won" pulled verbatim or paraphrased from prospect transcripts, and a transferable lesson the rep can apply to the next deal.
+
+    The AI ranks by strategic value, not by dollar amount — a small deal that taught you something is more useful in a QBR than a routine large win.
+  </Accordion>
+
+  <Accordion title="3. Losses" icon="circle-xmark">
+    1-3 closed-lost deals featured. The "why we lost" lines are honest and specific. Not "no budget" — what really happened in the discovery, who blocked, what the seller would do differently. This is the section that builds trust with managers.
+  </Accordion>
+
+  <Accordion title="4. Active pipeline" icon="bars-progress">
+    Current open Buyer Spaces. Per deal: stage, deal value, expected close date, last engagement summary (when the prospect last viewed / commented / signed), concrete next step with owner.
+  </Accordion>
+
+  <Accordion title="5. At risk" icon="triangle-exclamation">
+    Buyer Spaces with declining engagement signal — no view in 14+ days, MAP actions overdue, champion left the company, etc. Each entry has a specific risk reason and a proposed rescue plan.
+  </Accordion>
+
+  <Accordion title="6. Patterns + lessons" icon="lightbulb">
+    Themes that tie multiple deals together. "Three of your lost deals stalled at security review — pre-engage IT teams during discovery rather than after technical demo." 2-4 items ranked by what's most useful for the rep going forward. Quality over quantity — if the quarter's small, this section is short.
+  </Accordion>
+
+  <Accordion title="7. Talking points" icon="comment">
+    Short, conversational lines the rep reads out loud during the QBR. Less than 25 words each, written casually. Topic + point format so the rep can scan during the meeting.
+  </Accordion>
+
+  <Accordion title="8. Manager's likely questions" icon="circle-question">
+    The 2-3 hardest questions the manager will probably ask, with a preempt for each. "Why did the Acme deal slip?" + the context the rep should have ready. Walks the rep into the meeting prepared instead of caught flat-footed.
+  </Accordion>
+</AccordionGroup>
+
+## Generating a brief
+
+<Steps>
+  <Step title="Open QBR Briefs from the left sidebar">
+    The tab sits below Library in the main nav.
+  </Step>
+
+  <Step title="Click + Generate brief">
+    Pick a date range. Quick presets for last 30 / 60 / 90 days and last 6 months. Default = last 90 days. Sellers can also pick custom dates for half-year reviews or "since my last QBR" ad-hoc rollups.
+  </Step>
+
+  <Step title="Wait 20-40 seconds">
+    The AI reads every Buyer Space + linked recording + Handoff Brief in the window. Costs roughly $0.30-0.50 per generation; logged in your cost analysis.
+  </Step>
+
+  <Step title="Read in detail view, edit if needed">
+    Every section is editable. Hand-edits live in a separate `overrides_json` field, so re-generating the brief after adding new deals doesn't clobber your manual corrections.
+  </Step>
+
+  <Step title="Present from it during the QBR">
+    Click **Present** for full-screen Presenter mode. Arrow keys / spacebar advance. Esc exits. One section per "slide" — no slide-deck exports needed for V1.
+  </Step>
+
+  <Step title="Or download PDF">
+    Letter format, polished layout, same eight sections. Email to your manager pre-meeting or attach to a CRM activity.
+  </Step>
+</Steps>
+
+## Cross-rep access for admins
+
+Admins and Global Admins can read any teammate's QBR brief in their company. Cross-rep reads and writes are logged in your audit trail (`admin.cross_rep_read` / `admin.cross_rep_write`) so reps can see when a manager has reached into their brief.
+
+Admins can also generate a brief on behalf of a rep — useful for managers prepping coaching context before a 1:1. Admins **cannot** edit a teammate's overrides; that preserves attribution clarity ("this is what Sarah said about her quarter," not what her manager re-wrote).
+
+## What's NOT in V1
+
+- **Forecasting next quarter.** AI forecasting on a per-rep, single-quarter sample size hallucinates badly. We'd ship a confidence-killing feature. Backwards-looking facts only for V1; forecast is on the roadmap once we have enough deal volume per rep to train well.
+- **Manager team rollup.** Per-rep V1; team rollup is V2 (~3 days more, building when asked).
+- **Slide export** (PowerPoint, Google Slides). The Presenter mode + PDF cover the in-meeting and asynchronous share use cases. Slide export is V3 if customers explicitly ask.
+
+## Pricing notes
+
+QBR Brief generation uses Anthropic Sonnet 4.5 — typical cost $0.30-0.50 per brief depending on deal count. A 30-rep team running quarterly QBRs lands at roughly $36-60/year in AI cost. Negligible compared to the 60-120 person-hours saved.
