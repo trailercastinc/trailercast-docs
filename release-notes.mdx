@@ -10,6 +10,28 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-08-10" description="Coaching, a real profile menu, account security, dark mode">
+
+### New
+
+- **Coaching** (rolling out) — a whistle-icon sidebar tab answering "how is this person selling?": your talk ratio with trend, longest monologue, and question rate, computed from your recorded calls — plus QBR Briefs as its second sub-tab. On bot-recorded calls you're identified automatically by name; older calls ask once ("which speaker is you?") and fix the call page's labels at the same time. If you don't see Coaching yet, it isn't enabled for your workspace — QBR Briefs stay under Dashboards meanwhile.
+- **A real profile menu.** Your avatar now opens a proper dropdown: profile, password & security, notifications, a light/dark toggle, sign out — and for admins, direct links to Team & permissions, Billing, and Workspace settings. Your signed-in email is finally visible (profile menu header and Profile page).
+- **Company-wide two-factor authentication.** Admins can require 2FA for everyone (Security & Permissions). Teammates without it get a guided enrollment screen at next sign-in. Personal setup lives under avatar → Password & security, backup codes included.
+- **Sign out everywhere.** One click (Password & security) revokes your sessions on every device within a minute — for the lost-laptop day.
+
+### Improved
+
+- **Conversations moved to the top ribbon.** The prospect-threads inbox is now the speech-bubble icon next to notifications, with an unread badge — one less sidebar item, and it's visible from every page.
+- **Real names on talking timelines.** Bot-recorded calls (including past ones) now label speakers with actual participant names from the meeting platform instead of "Speaker 0 / Speaker 1".
+- **Meetings and discovery calls record in gallery view** so everyone on the call is visible in the recording. Demo recordings stay speaker view — that's what your trailers are cut from.
+- **Dark mode, actually dark.** The top bar, search, menus, Library, Coaching, QBR Briefs, and the Impact dashboard all follow your theme now instead of staying white — and text stays legible throughout.
+
+### Fixed
+
+- **Long-call summaries no longer vanish.** Summaries of long meetings (up to ~2 hours) were silently failing and rendering empty topic lists; they're now schema-enforced, and a failed summary shows a retry state instead of pretending there was nothing to say.
+
+</Update>
+
 <Update label="Week of 2026-05-10" description="QBR Briefs shipped">
 
 ### New

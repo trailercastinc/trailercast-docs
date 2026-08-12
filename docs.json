@@ -56,7 +56,13 @@
               "sharing",
               "conversations",
               "buyer-spaces",
-              "library",
+              "library"
+            ]
+          },
+          {
+            "group": "Coaching & review",
+            "pages": [
+              "coaching",
               "qbr-briefs"
             ]
           },
