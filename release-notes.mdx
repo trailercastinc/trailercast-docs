@@ -10,6 +10,24 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-08-24" description="Documents open instantly, in their own tab">
+
+### New
+
+- **Decision Room documents are read in the room now.** Every document in a Buyer Space shows as a card with a page-1 preview and a page count, and **View** opens it in place — no download, no login, nothing for the buying committee to install. A downloaded document disappears from your view the moment it lands in someone's Downloads folder; a document read in the room reports opens, total reading time, completion, and **which pages held attention** — attributed to that specific document, even though the whole room sits behind one link. Downloads are still tracked as their own signal (the file is being circulated internally). Pages are pre-rendered at upload so page one appears immediately, and a text layer ships alongside for screen readers; a large upload may briefly show a "preparing pages" state and stays viewable throughout. Word, PowerPoint, Excel, and ZIP files can't be rendered as pages and continue to offer download only. Documents attached from the Sales Library reuse the Library's existing rendering and preview rather than re-rendering per room.
+
+- **Prospects can comment on a specific document.** A buyer can leave a comment right on a document card — no account required. It lands in the same conversation thread as everything else in the room, tagged with the document it's about, so you read and reply in **Conversations** instead of watching a second inbox. Threads stay private per recipient: a stakeholder who was forwarded the room gets their own thread and never sees anyone else's.
+
+### Improved
+
+- **Shared documents open fast, as their own page.** Clicking **View** on a document now opens it in a new tab at its own permanent, copy-pasteable URL, and it renders immediately instead of making the recipient wait for the whole file to download. Under the hood we now pre-render each PDF page to an image when the document is uploaded, so the viewer shows page one as soon as it arrives rather than shipping a PDF engine to the reader's browser. Page-by-page attention tracking is unchanged, and the page carries a text layer so screen readers can read it. Very large documents briefly show a "preparing" state right after upload while pages render, and stay viewable the whole time. Word, PowerPoint, and Excel files can't be rendered as pages and continue to offer download instead.
+
+### Fixed
+
+- **Hiding a document from a prospect now hides it everywhere.** Marking an individual document hidden removed it from the prospect's Documents list, but someone who already had its direct download link could still pull the file. Hidden documents are now unreadable and undownloadable from the prospect side, matching what the toggle always implied.
+
+</Update>
+
 <Update label="Week of 2026-08-17" description="Shareable, tracked documents">
 
 ### New
