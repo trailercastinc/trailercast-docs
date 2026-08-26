@@ -85,7 +85,8 @@
             "pages": [
               "roles-and-permissions",
               "privacy-and-security",
-              "billing"
+              "billing",
+              "email-allowlisting"
             ]
           },
           {
@@ -131,17 +132,35 @@
       {
         "header": "Product",
         "items": [
-          { "label": "Pricing", "href": "https://trailercast.io/pricing" },
-          { "label": "Compare", "href": "https://trailercast.io/compare" },
-          { "label": "Privacy", "href": "https://trailercast.io/privacy" }
+          {
+            "label": "Pricing",
+            "href": "https://trailercast.io/pricing"
+          },
+          {
+            "label": "Compare",
+            "href": "https://trailercast.io/compare"
+          },
+          {
+            "label": "Privacy",
+            "href": "https://trailercast.io/privacy"
+          }
         ]
       },
       {
         "header": "Get help",
         "items": [
-          { "label": "Email support", "href": "mailto:hello@trailercast.io" },
-          { "label": "Status page", "href": "https://status.trailercast.io" },
-          { "label": "What's new", "href": "/release-notes" }
+          {
+            "label": "Email support",
+            "href": "mailto:hello@trailercast.io"
+          },
+          {
+            "label": "Status page",
+            "href": "https://status.trailercast.io"
+          },
+          {
+            "label": "What's new",
+            "href": "/release-notes"
+          }
         ]
       }
     ]

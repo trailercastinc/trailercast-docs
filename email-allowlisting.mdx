@@ -1,0 +1,52 @@
+---
+title: "Email Allowlisting for IT Teams"
+description: "Everything a mail administrator needs to verify TrailerCast email and make sure it reaches your team's inboxes."
+icon: "envelope-circle-check"
+---
+
+This page is written for the IT or security administrator of a company **receiving** TrailerCast email — usually because a vendor your team is evaluating uses TrailerCast to share demo videos, documents, and Decision Rooms. Feel free to forward it to yours.
+
+## What TrailerCast sends
+
+Every message is triggered by a person at the vendor: an invitation to a Decision Room, a shared demo video, a reply to a comment your colleague left, or a reminder about an action item your team agreed to. TrailerCast sends **no bulk mail, no marketing, and no automated sequences**. Every commercial message carries RFC 8058 one-click unsubscribe headers, honoured immediately.
+
+## Authentication details
+
+| Property | Value |
+|---|---|
+| From domain | `trailercast.io` (e.g. `hello@trailercast.io`) |
+| Envelope / Return-Path | `send.trailercast.io` (Amazon SES, via Resend) |
+| SPF | `send.trailercast.io` → `v=spf1 include:amazonses.com ~all` |
+| DKIM selector | `resend._domainkey.trailercast.io`, signing as `d=trailercast.io` |
+| DMARC | Published and enforced on `trailercast.io` |
+| Link domains | `app.trailercast.io` (current) and `trailercast.cloud` (older messages) |
+
+SPF, DKIM, and DMARC all pass and align on every message. You can verify against any received message's `Authentication-Results` header.
+
+## Allowing TrailerCast in Microsoft 365
+
+Any of the following, in order of preference:
+
+<Steps>
+  <Step title="Release and mark as not junk (no admin needed)">
+    The recipient opens their quarantine (the "Microsoft 365 quarantine" digest email, or `security.microsoft.com/quarantine`), selects the TrailerCast message, and clicks **Release** and **Report as not junk**. This trains your tenant's filter directly and is usually enough on its own.
+  </Step>
+  <Step title="Add an allowed domain (admin)">
+    In Microsoft 365 Defender: **Email &amp; collaboration → Policies &amp; rules → Threat policies → Anti-spam policies**, edit your inbound policy and add `trailercast.io` to **Allowed domains**.
+  </Step>
+  <Step title="Mail flow rule scoped to authenticated mail (admin, most precise)">
+    In Exchange admin center, create a mail flow rule: *if* the sender's domain is `trailercast.io` **and** the message header `Authentication-Results` contains `dmarc=pass`, *then* set the spam confidence level (SCL) to **-1**. The `dmarc=pass` condition means a spoofed message can never ride the exemption.
+  </Step>
+</Steps>
+
+## Allowing TrailerCast in Google Workspace
+
+In the Admin console: **Apps → Google Workspace → Gmail → Spam, phishing and malware**, add `trailercast.io` to the **approved senders** list on your spam policy, or create an inbound gateway/allowlist entry for mail passing DMARC for `trailercast.io`.
+
+## A note on link scanning
+
+TrailerCast links are safe to scan. Defender Safe Links and similar products can fetch and detonate our URLs freely: share links are not single-use, nothing is consumed by an automated visit, and no credential entry is requested at any link destination — a recipient is never asked for a password to view what was shared with them.
+
+## Questions
+
+Email [hello@trailercast.io](mailto:hello@trailercast.io) and a human will answer.
