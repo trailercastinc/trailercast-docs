@@ -24,6 +24,12 @@ Each card shows: kind chip · prospect name (if known) · duration · date · st
 
 Bots scheduled by your calendar integration land here. Default view is **List** (toggle to Calendar if you prefer).
 
+Each scheduled row has a **Join** button that opens the meeting's own Zoom, Meet, or Teams link in a new tab — the same link the Join button in Google Calendar or Outlook uses, with no TrailerCast page in between.
+
+The **Upcoming calls widget** at the bottom of the left sidebar goes further: it shows *every* meeting on your connected calendar for today and the next two days — including ones the notetaker won't record — each with its own Join button. A pulsing red dot marks the meetings the notetaker will attend; no dot means the meeting isn't being recorded. If a Zoom invite carries its passcode as text instead of inside the link, the widget shows the passcode next to the meeting time. Meetings without a detectable join link appear without a Join button.
+
+If you don't see Join buttons or non-recorded meetings in the widget yet, the feature isn't enabled for your workspace yet — it's rolling out.
+
 ### Actions on an upcoming bot
 
 Open the kebab menu (⋯) on any upcoming row:
@@ -143,5 +149,5 @@ Pick the right kind at scheduling time when possible, saves a reclassify step la
 
 Calls is for **anything recorded by a bot or uploaded as a recording**. It's NOT:
 - Your CRM activity log (that lives elsewhere if you've integrated)
-- A list of upcoming meetings without bots scheduled (those live in your calendar tool)
+- A list of upcoming meetings without bots scheduled (the sidebar's Upcoming calls widget shows those — see above — but the Calls page itself only lists meetings with a bot)
 - A list of email threads (those are in Conversations)
