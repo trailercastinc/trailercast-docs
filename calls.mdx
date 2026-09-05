@@ -4,25 +4,23 @@ description: "The unified inbox for everything that gets recorded, demos, qualif
 icon: "phone"
 ---
 
-The Calls phase is your inbox for every recording. Three sub-views (All / Upcoming / Completed) and three recording kinds (Demo / Qualifying Call / Meeting).
+The Calls phase is your inbox for every recording — three recording kinds (Demo / Qualifying Call / Meeting), one list.
 
 ## The Calls inbox
 
-**Calls** in the left nav. Three sub-views:
+<Note>The inbox layout described here is rolling out workspace-by-workspace from 2026-09-04. If your Calls screen still shows **Upcoming** and **Completed** tabs, you have the earlier layout: Upcoming holds scheduled bots (List / Day / Week / Month views) and Completed holds the recordings as a card grid with the same filters.</Note>
 
-| View | What's in it |
-|---|---|
-| **All** | Everything |
-| **Upcoming** | Bots scheduled but not yet recorded |
-| **Completed** | Done, processed, ready to review |
+**Calls** in the left nav opens straight on your recordings, newest first. Nothing to click through first.
 
-A pill switcher at the top lets you filter by recording kind: All / Demo / Qualifying Call / Meeting.
-
-Each card shows: kind chip · prospect name (if known) · duration · date · status. Hover to scrub a thumbnail preview.
+- **List** is the default: each row shows a thumbnail, the title and the AI's one-line headline, the recording kind, date, length, and status. **Grid** switches to cards with a larger poster frame. Your choice is remembered.
+- **One toolbar**: kind (All / Demos / Qualifying / Meetings), a search box that matches company, prospect, file name and headline, an owner picker (admins), and a date range. The kind filter is remembered too.
+- The **⋮** menu on any row or card has **Reclassify** and, for Global Admins, **Mark private / public**.
 
 ## Upcoming calls
 
-Bots scheduled by your calendar integration land here. Default view is **List** (toggle to Calendar if you prefer).
+Scheduled notetakers sit in a compact **Up next** strip above the list — one chip per meeting with the time, the recording kind, an amber dot when the kind still needs confirming, and **Join** where enabled. Click a chip to open the call and confirm its kind. **Manage** expands the strip into full rows with **Don't record** and **Retry**. When nothing is scheduled the strip is a single line with a link to Integrations.
+
+There is no calendar view on this screen any more; the sidebar's Upcoming-calls widget and your own calendar already show what's on today.
 
 ### Actions on an upcoming bot
 
