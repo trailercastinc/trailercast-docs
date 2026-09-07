@@ -1,0 +1,74 @@
+---
+title: "Pagination and incremental sync"
+description: "Every list is keyset-paginated. Keep the last cursor and you have incremental sync for free."
+icon: "arrow-right-arrow-left"
+---
+
+Every list endpoint returns the same envelope:
+
+```json
+{
+  "data": [ … ],
+  "nextCursor": "eyJ1IjoiMjAyNi0…",
+  "hasMore": true
+}
+```
+
+- Pass `cursor=<nextCursor>` to get the next page.
+- `limit` is 1–500, default 100.
+- Ordering is **ascending on the sort key**, so a feed reads like a log: older first, newest last.
+- `nextCursor` is returned **even when `hasMore` is `false`**. Store it, and the next call returns only rows added or updated since — that is the whole incremental-sync mechanism. Cursors never expire.
+
+## Cursor kinds
+
+| Endpoint | Sort key | Cursor |
+|---|---|---|
+| `GET /calls` | `(updatedAt, id)` | opaque string |
+| `GET /decision-rooms` | `(lastActivityAt, id)` | opaque string |
+| `GET /engagement/events` | event `id` | the last `id` you received (integer string) |
+| `GET /engagement/views` | view `id` | the last `id` you received (integer string) |
+
+A cursor is only valid for the endpoint that issued it; sending one elsewhere returns `400 INVALID_CURSOR`. Opaque cursors are base64url-encoded JSON — you may inspect them, but do not build them by hand.
+
+## Rows are never skipped or repeated
+
+Keyset pagination on a stable sort key means a row inserted while you are paging cannot cause the page boundary to shift under you. What *can* happen is a row being returned **again** because it changed:
+
+- A call whose summary is regenerated gets a new `updatedAt` and moves forward in `/calls`.
+- A Decision Room that sees new activity moves forward in `/decision-rooms`.
+
+**Upsert on `id`**, never insert blindly, and you are safe on both counts.
+
+## The three-step recipe
+
+<Steps>
+  <Step title="Backfill">
+    Call each feed from an empty cursor with `limit=500` until `hasMore` is `false`. Store the final `nextCursor` per feed. For Decision Rooms, follow each room with `GET /decision-rooms/{id}/metrics` if you want the roll-ups.
+  </Step>
+  <Step title="Incremental">
+    On a schedule (every few minutes is plenty), call each feed with its stored cursor. Whatever comes back is new or changed. Store the new `nextCursor`.
+  </Step>
+  <Step title="Webhooks for latency">
+    Register an endpoint so events arrive in seconds instead of at the next tick. Apply the payload, dedupe on the envelope `id`, and — optionally — trigger an early incremental pass. A dropped webhook then costs latency, never data.
+  </Step>
+</Steps>
+
+## Filters
+
+Filters narrow a feed without changing how it pages:
+
+| Parameter | Endpoints | Notes |
+|---|---|---|
+| `updated_since` | `/calls`, `/decision-rooms` | ISO-8601. Rows updated at or after |
+| `since` | `/engagement/events`, `/engagement/views` | ISO-8601. Rows that occurred at or after |
+| `kind` | `/calls` | `demo`, `qualifying_call`, `meeting` |
+| `has_summary=true` | `/calls` | Only calls with an AI summary |
+| `buyer_space_id` | `/calls`, `/engagement/*` | One Decision Room, including its share links |
+| `demo_id` | `/engagement/*` | One recording |
+| `distribution_id` | `/engagement/views` | One share link |
+| `types` | `/engagement/events` | Comma-separated event types, up to 20 |
+| `status` | `/decision-rooms` | `open`, `won`, `lost`, `dormant` |
+
+<Tip>
+  For incremental sync, prefer the **cursor** over `since` / `updated_since`. A timestamp filter can miss two rows with the same timestamp on either side of a page boundary; a cursor cannot.
+</Tip>

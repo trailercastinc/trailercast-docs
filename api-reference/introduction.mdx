@@ -1,0 +1,80 @@
+---
+title: "TrailerCast API"
+description: "Pull the deal signals TrailerCast captures — AI call summaries, prospect engagement, Decision Room activity — into your CRM, warehouse, or workflow tool."
+icon: "code"
+---
+
+The TrailerCast API is a **read-only, REST-style API** for the data TrailerCast captures during a sale, plus **signed webhooks** that tell your system the moment something happens. It is the same interface TrailerCast's own CRM integration is built on.
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/api-reference/quickstart">
+    Create a key, make your first request, and receive your first webhook in about ten minutes.
+  </Card>
+  <Card title="Authentication" icon="key" href="/api-reference/authentication">
+    Workspace-scoped API keys, what they can and cannot do, and how to rotate them.
+  </Card>
+  <Card title="Webhooks" icon="bolt" href="/api-reference/webhooks/overview">
+    Event types, the envelope, signature verification, and delivery guarantees.
+  </Card>
+  <Card title="Endpoints" icon="list" href="/api-reference/endpoint/status">
+    Every endpoint, generated from the OpenAPI spec, with a try-it playground.
+  </Card>
+</CardGroup>
+
+## What you can read
+
+| Data | Endpoints | What it gives you |
+|---|---|---|
+| **Calls** | `GET /calls`, `GET /calls/{id}` | Every completed recording with its AI summary: headline, pain points, decision criteria, next steps, qualification verdict, topics with timestamps, and the people on the call. |
+| **Engagement events** | `GET /engagement/events` | The unified feed of prospect actions — trailer views, document opens, Decision Room visits, action-plan check-offs, messages, forwards — in the order they were recorded. |
+| **View telemetry** | `GET /engagement/views` | Watch time, completion percentage, and device for every trailer or document open. |
+| **Playback heat-map** | `GET /distributions/{id}/heatmap` | Where viewers of one share link watched, re-watched, and stopped. |
+| **Decision Rooms** | `GET /decision-rooms`, `GET /decision-rooms/{id}` | Each room's status (open / won / lost / dormant), value, close date, owner, and last activity. |
+| **Room metrics** | `GET /decision-rooms/{id}/metrics` | Per-stakeholder engagement, reading time per document, mutual-action-plan progress, eSignature status, and an engagement score. |
+
+## What you can be told about
+
+Register a webhook endpoint and TrailerCast pushes a signed event when:
+
+- a prospect does something (`engagement.recorded`)
+- an AI call summary is generated or regenerated (`call.summary.created`)
+- a Decision Room's status, value, close date, or contact changes (`decision_room.updated`)
+- a tracked contract changes signature status (`decision_room.esign.updated`)
+
+Webhooks are the **doorbell**; the endpoints above are the **truth**. The recommended pattern is to act on the webhook, then reconcile with the cursor-paginated endpoints — a dropped delivery costs latency, never data. See [Syncing a CRM](/api-reference/syncing-a-crm).
+
+## Core concepts
+
+<AccordionGroup>
+  <Accordion title="Workspace" icon="building">
+    Everything in TrailerCast belongs to a workspace (your company). An API key is minted **by** a workspace and can only ever read that workspace. There is no way to name another workspace in a request, and an id that belongs to a different workspace returns `404`, not `403` — the API never confirms it exists.
+  </Accordion>
+  <Accordion title="Call" icon="phone">
+    A completed recording — a demo, a discovery ("qualifying") call, or an internal meeting — with its transcript-derived AI summary. Calls are identified by a UUID and carry `updatedAt`, which moves when the summary is regenerated.
+  </Accordion>
+  <Accordion title="Decision Room" icon="door-open">
+    The buyer-facing room a rep builds for one opportunity: trailers, documents, a mutual action plan, the buying committee, and a conversation thread. This is the object that maps most naturally to a **deal** in a CRM. Identified by a UUID (`buyerSpaceId` wherever it appears on other objects).
+  </Accordion>
+  <Accordion title="Distribution" icon="link">
+    A per-recipient share link — the credential a prospect opens a trailer, document, or room with. It is how engagement is attributed to a named person: every event carries the `distributionId` it came through, and the `actor` on that event is the person the link was addressed to.
+  </Accordion>
+  <Accordion title="Engagement event" icon="chart-line">
+    One prospect action, with a type, a timestamp, the actor, and the objects involved. Events have integer ids and are served in id order, which is what makes them safe to sync with a cursor.
+  </Accordion>
+</AccordionGroup>
+
+## Base URL
+
+```
+https://<your-trailercast-api-host>/api/v1
+```
+
+Your API host is shown on **Settings → Integrations → API access** next to your keys. For most workspaces it is `https://trailercst-backend-production.up.railway.app`.
+
+## Availability
+
+The API is enabled per workspace. If a request returns `403 FEATURE_NOT_ENABLED`, it is not yet turned on for your workspace — contact [hello@trailercast.io](mailto:hello@trailercast.io).
+
+<Note>
+  **Read-only.** There is no endpoint that creates or changes anything in TrailerCast. Writes — deals, notes, tasks — belong in your system of record; TrailerCast supplies the buyer-side evidence.
+</Note>

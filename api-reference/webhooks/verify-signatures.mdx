@@ -1,0 +1,137 @@
+---
+title: "Verifying signatures"
+description: "Every delivery is signed with your endpoint's secret. Verify it before trusting the body — it is the only proof the request came from TrailerCast."
+icon: "shield-check"
+---
+
+Your webhook URL is reachable by anyone who learns it. The signature is what stops a forged request from putting fake engagement on a deal.
+
+## The scheme
+
+The header looks like:
+
+```
+X-TrailerCast-Signature: t=1788715860,v1=5f1a…e3
+```
+
+- `t` — Unix time (seconds) when TrailerCast signed this attempt.
+- `v1` — hex HMAC-SHA256 of the string **`${t}.${rawBody}`** using your endpoint's secret.
+
+The timestamp is **inside** the signed string, so it cannot be altered to defeat the replay window.
+
+## The algorithm
+
+<Steps>
+  <Step title="Capture the raw body">
+    Compute the HMAC over the **exact bytes received**. Do not re-serialise the parsed JSON — key order and whitespace would differ and every signature would fail in a way that looks like a wrong secret.
+  </Step>
+  <Step title="Parse the header">
+    Split on commas, then on `=`. Reject the request if `t` is not a number or `v1` is missing.
+  </Step>
+  <Step title="Check the timestamp">
+    Reject if `t` is more than **5 minutes** from now, in either direction. A future timestamp is as suspicious as an old one.
+  </Step>
+  <Step title="Compute and compare">
+    `HMAC-SHA256(secret, t + "." + rawBody)` as lowercase hex. Compare to `v1` with a **constant-time** comparison. A plain string compare leaks, byte by byte, how much of a guess was right.
+  </Step>
+</Steps>
+
+## Examples
+
+<CodeGroup>
+```javascript Node.js (Express)
+const crypto = require('crypto');
+const express = require('express');
+
+const app = express();
+
+// Keep the raw bytes — the signature is over these, not the parsed object.
+app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf; } }));
+
+function verifyTrailerCast(req, secret, toleranceSeconds = 300) {
+  const header = req.get('X-TrailerCast-Signature') || '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.trim().split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+
+  const expected = crypto.createHmac('sha256', secret)
+    .update(`${t}.`).update(req.rawBody).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+app.post('/hooks/trailercast', (req, res) => {
+  if (!verifyTrailerCast(req, process.env.TRAILERCAST_WEBHOOK_SECRET)) {
+    return res.status(401).end();
+  }
+  const event = req.body;              // { id, type, data, … }
+  queue.push(event);                   // do the real work off the request
+  res.status(200).end();
+});
+```
+
+```python Python (Flask)
+import hmac, hashlib, os, time
+from flask import Flask, request, abort
+
+app = Flask(__name__)
+SECRET = os.environ["TRAILERCAST_WEBHOOK_SECRET"].encode()
+
+def verify(raw_body: bytes, header: str, tolerance: int = 300) -> bool:
+    parts = dict(p.strip().split("=", 1) for p in header.split(",") if "=" in p)
+    try:
+        t = int(parts["t"]); v1 = parts["v1"]
+    except (KeyError, ValueError):
+        return False
+    if abs(time.time() - t) > tolerance:
+        return False
+    expected = hmac.new(SECRET, f"{t}.".encode() + raw_body, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, v1)
+
+@app.post("/hooks/trailercast")
+def hook():
+    if not verify(request.get_data(), request.headers.get("X-TrailerCast-Signature", "")):
+        abort(401)
+    event = request.get_json()
+    enqueue(event)
+    return "", 200
+```
+
+```go Go
+func verifyTrailerCast(rawBody []byte, header, secret string, tolerance time.Duration) bool {
+    var ts int64
+    var sig string
+    for _, part := range strings.Split(header, ",") {
+        kv := strings.SplitN(strings.TrimSpace(part), "=", 2)
+        if len(kv) != 2 { continue }
+        switch kv[0] {
+        case "t":  ts, _ = strconv.ParseInt(kv[1], 10, 64)
+        case "v1": sig = kv[1]
+        }
+    }
+    if ts == 0 || sig == "" { return false }
+    if d := time.Since(time.Unix(ts, 0)); d > tolerance || d < -tolerance { return false }
+
+    mac := hmac.New(sha256.New, []byte(secret))
+    mac.Write([]byte(strconv.FormatInt(ts, 10) + "."))
+    mac.Write(rawBody)
+    expected := hex.EncodeToString(mac.Sum(nil))
+    return hmac.Equal([]byte(expected), []byte(sig))
+}
+```
+</CodeGroup>
+
+## Rotating the secret
+
+**Rotate secret** on the endpoint issues a new `whsec_…` and shows it once. Deliveries already queued are signed with the **new** secret from their next attempt, so update your verifier before clicking rotate, or accept a short window of `401`s that will be retried.
+
+## Common failures
+
+| Symptom | Cause |
+|---|---|
+| Every signature fails, even the test ping | You are hashing the parsed-and-re-serialised body. Hash the raw bytes. |
+| Signatures fail only sometimes | Clock skew beyond 5 minutes on your server. Sync it. |
+| Signatures started failing after a deploy | The secret was rotated and the new value is not deployed yet. |
+| Test ping verifies, real events fail | Your framework transforms the body for some content or sizes (compression, BOM stripping). Capture bytes before any middleware. |
