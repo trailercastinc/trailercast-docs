@@ -1,0 +1,40 @@
+---
+title: "Rate limits"
+description: "300 requests per minute per API key, with headers that tell you where you stand."
+icon: "gauge"
+---
+
+| Limit | Value |
+|---|---|
+| Requests per minute, per API key | **300** |
+| Maximum `limit` per list request | 500 rows |
+| Webhook request timeout (your endpoint) | 10 seconds |
+
+## Headers
+
+Every response carries:
+
+```
+X-RateLimit-Limit: 300
+X-RateLimit-Window: 60
+```
+
+When you exceed the limit you receive `429` with a `Retry-After` header (seconds):
+
+```json
+{
+  "error": "Rate limit exceeded (300 requests per minute per API key). Retry after the Retry-After header.",
+  "code": "RATE_LIMITED"
+}
+```
+
+## Staying under it
+
+- **Backfill at `limit=500`.** A workspace with 50,000 engagement events is 100 requests — well inside one minute.
+- **Poll no more often than once a minute** per feed. With webhooks registered, every five minutes is plenty.
+- **Metrics are per room.** `GET /decision-rooms/{id}/metrics` is the one call that fans out — one request per room. Fetch metrics only for rooms that appeared in the latest `/decision-rooms` page (they moved, so something changed), not for every room every time.
+- **Honour `Retry-After`.** Back off for at least that long; do not retry in a tight loop.
+
+## Bursts and multiple systems
+
+The limit is per key. If two systems consume the API, give each its own key (they are free) so one system's backfill cannot starve the other.

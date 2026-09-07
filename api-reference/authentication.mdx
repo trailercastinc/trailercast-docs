@@ -1,0 +1,55 @@
+---
+title: "Authentication"
+description: "Workspace-scoped API keys — format, scope, rotation, and the errors you can get back."
+icon: "key"
+---
+
+Every data endpoint takes an API key as a bearer token:
+
+```
+Authorization: Bearer tck_live_<43 url-safe characters>
+```
+
+## Keys are workspace credentials, not user logins
+
+A session token in the TrailerCast app belongs to a **person** and dies with their login. An API key belongs to a **workspace** and is held by a **system**. The two are deliberately separate:
+
+- A key can only read the workspace that minted it. Nothing in a request — path, query, body — can name another workspace.
+- Keys are **read-only** (`scopes: ["read"]`). Creating and revoking keys, and managing webhook endpoints, is done by an admin in the TrailerCast app, never with a key.
+- A session token sent to a data endpoint is refused with `401 API_KEY_REQUIRED`, even though it is a valid login.
+
+## Creating a key
+
+**Settings → Integrations → API access → Create key.** Admins only. Name the key for the system that will hold it; the name shows in the key list and in the audit log.
+
+The plaintext is displayed **once**. Only a SHA-256 hash is stored, so a lost key cannot be recovered — revoke it and create a new one.
+
+## Rotating a key
+
+1. Create a new key.
+2. Deploy it to the consuming system.
+3. Revoke the old one from the same screen.
+
+Both keys work during the overlap, so rotation needs no downtime. Revocation is immediate: the next request with the old key returns `401 API_KEY_REVOKED`.
+
+## Errors
+
+Every error body is `{ "error": "<human message>", "code": "<STABLE_CODE>" }`. Branch on `code`, never on the message.
+
+| Status | `code` | Meaning | What to do |
+|---|---|---|---|
+| 401 | `API_KEY_REQUIRED` | No bearer token, or a bearer that is not a `tck_live_` key (for example a session JWT) | Send the API key |
+| 401 | `API_KEY_INVALID` | Key is not recognised | Check for a copy-paste error; the key may have been minted for a different host |
+| 401 | `API_KEY_REVOKED` | Key was revoked by an admin | Use the replacement key |
+| 403 | `FEATURE_NOT_ENABLED` | The API is not enabled for this workspace | Contact TrailerCast |
+| 503 | `API_KEY_CHECK_UNAVAILABLE` | Transient failure verifying the key | Retry with backoff |
+
+<Note>
+  Key creation and revocation are written to the workspace **audit log** (Settings → Audit log) with who did it and when, alongside webhook endpoint changes.
+</Note>
+
+## Keeping keys safe
+
+- Treat a key like a password: environment variables or a secrets manager, never source control, never a browser.
+- One key per consuming system. If a system is decommissioned or a key might have leaked, revoking that one key affects nothing else.
+- The key list shows **Last used**, so an unused key is easy to spot and remove.

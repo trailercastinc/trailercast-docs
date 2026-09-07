@@ -1,0 +1,72 @@
+---
+title: "Webhooks overview"
+description: "Register an HTTPS endpoint and TrailerCast pushes a signed event the moment something happens."
+icon: "bolt"
+---
+
+Webhooks are the **doorbell**; the [endpoints](/api-reference/endpoint/status) are the **truth**. Delivery is at-least-once and unordered, so the pattern that holds up is: verify the signature, dedupe on the event `id`, act on the payload, and reconcile with the cursor feeds on a schedule.
+
+## Registering an endpoint
+
+**Settings → Integrations → API access → Webhook endpoints → Add endpoint.** Admins only.
+
+| Field | Notes |
+|---|---|
+| **URL** | Must be `https` and a public host. Private and link-local addresses, and URLs with embedded credentials, are refused. |
+| **Events** | Pick specific [event types](/api-reference/webhooks/events) or **All events**. You can change this later. |
+| **Description** | Free text for your own reference — "Production CRM", "Staging warehouse". |
+
+The **signing secret** (`whsec_…`) is shown once when the endpoint is created. Store it beside your API key; every delivery must be [verified](/api-reference/webhooks/verify-signatures) with it. **Rotate secret** issues a new one at any time — deliveries already queued are signed with the new secret from their next attempt, so update your side first.
+
+## The envelope
+
+Every delivery is a `POST` with `Content-Type: application/json`:
+
+```json
+{
+  "id": "b0e6d2a4-3c1f-4a7e-9a2b-1f0c8d7e6a5b",
+  "type": "engagement.recorded",
+  "apiVersion": "2026-09-01",
+  "createdAt": "2026-09-04T18:21:07.412Z",
+  "companyId": 5,
+  "data": { … }
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `id` | The event's id. **Your idempotency key.** The same `id` is sent to every endpoint receiving this event, and again on every retry. |
+| `type` | One of the [event types](/api-reference/webhooks/events). Unknown types must be acknowledged and ignored. |
+| `apiVersion` | Contract date. Informational. |
+| `createdAt` | When the event was created — not when this attempt was sent. |
+| `companyId` | Your workspace id. Matches `company.id` from `GET /status`. |
+| `data` | The payload, shaped per event type. Built by the same serialisers as the pull endpoints, so an object arrives identically whether pushed or pulled. |
+
+## Headers
+
+| Header | Value |
+|---|---|
+| `X-TrailerCast-Signature` | `t=<unix seconds>,v1=<hex HMAC-SHA256>` — see [Verifying signatures](/api-reference/webhooks/verify-signatures) |
+| `X-TrailerCast-Event` | The `type`, so you can route before parsing the body |
+| `X-TrailerCast-Event-Id` | The `id` |
+| `X-TrailerCast-Delivery` | A per-endpoint delivery id; changes between endpoints, stays the same across retries |
+| `User-Agent` | `TrailerCast-Webhooks/1.0` |
+
+## What your endpoint must do
+
+1. **Verify the signature** before trusting anything in the body.
+2. **Respond `2xx` within 10 seconds.** Queue the work and acknowledge; a slow handler is retried as a failure and you receive the event again.
+3. **Dedupe on `id`.** You will see the same event more than once — a retry after a timeout that actually succeeded is the common case.
+4. **Ignore what you do not recognise.** New event types and new fields ship without notice.
+
+## Testing an endpoint
+
+**Send test** on the endpoint posts an `integration.ping` synchronously and shows the status code your URL returned. The delivery is recorded like any other, so it appears in the delivery log with its attempt and outcome.
+
+## Observability
+
+- The endpoint list shows **last success**, **last error**, and a **consecutive failures** count.
+- **View deliveries** on an endpoint lists recent deliveries with status (`pending`, `delivered`, `dead`), attempts, last HTTP status, and last error. Dead deliveries can be **retried** from there.
+- Consumers can read the same log with an API key: `GET /webhook-deliveries?status=dead`.
+
+Retry timing, dead-lettering, and automatic disabling are on [Delivery and retries](/api-reference/webhooks/delivery).

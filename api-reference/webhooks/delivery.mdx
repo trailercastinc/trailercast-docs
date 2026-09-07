@@ -1,0 +1,53 @@
+---
+title: "Delivery and retries"
+description: "At-least-once, unordered, retried on a fixed schedule, dead-lettered when exhausted."
+icon: "truck"
+---
+
+## Guarantees
+
+| Property | Behaviour |
+|---|---|
+| **Delivery** | At-least-once. The same event can arrive more than once — dedupe on the envelope `id`. |
+| **Ordering** | Not guaranteed. Use `data.occurredAt` / `createdAt`, not arrival order. |
+| **Timeout** | Your endpoint has **10 seconds** to respond. Acknowledge first, work later. |
+| **Success** | Any `2xx`. |
+| **Failure** | Any other status, a timeout, or a connection error. |
+
+## Retry schedule
+
+A failed delivery is retried up to **8 attempts** in total, with this wait before each retry:
+
+```
+30s · 2m · 10m · 30m · 2h · 6h · 12h · 24h      (≈45 hours end to end)
+```
+
+After the eighth failure the delivery is **dead-lettered**: status `dead`, kept in the delivery log, never retried automatically. An admin can re-queue it from **View deliveries** on the endpoint, and consumers can find it with `GET /webhook-deliveries?status=dead`.
+
+<Note>
+  A `4xx` from your endpoint is treated like any other failure and retried. If a payload will never parse, respond `2xx` and log it on your side — or let it dead-letter and inspect it in the log.
+</Note>
+
+## Automatic disabling
+
+Two things turn an endpoint off without an admin's involvement:
+
+| Trigger | Effect |
+|---|---|
+| Your endpoint responds **`410 Gone`** | Disabled immediately. The delivery is dead-lettered. Use this to tell TrailerCast to stop. |
+| **20 consecutive failed deliveries** | Disabled, with the reason recorded on the endpoint. |
+
+While an endpoint is disabled, events are **not queued** for it. When an admin re-enables it (which also resets the failure counter), reconcile with the cursor feeds to pick up what was missed — this is the case the polling half of the pattern exists for.
+
+## What you see, and where
+
+| Where | What |
+|---|---|
+| **Settings → Integrations → API access**, endpoint list | Enabled / disabled, disabled reason, last success, last error, consecutive failures |
+| **View deliveries** on an endpoint | Recent deliveries: status, attempts, next attempt time, last HTTP status, last error; **Retry** on any that are not delivered |
+| `GET /status` (API key) | Counts of pending and dead deliveries across the workspace, last delivered time |
+| `GET /webhook-deliveries?status=` (API key) | The same delivery log, machine-readable |
+
+## Handling bursts
+
+A room going live to a buying committee can produce dozens of `engagement.recorded` events in a minute. Deliveries are sent as they come due, in id order, in batches of 50 per dispatcher tick (every 15 seconds), so a burst arrives over a few ticks rather than all at once. Your handler should still be prepared to see events out of order.

@@ -1,0 +1,38 @@
+---
+title: "Versioning and changelog"
+description: "What counts as a breaking change, how you will hear about one, and what has shipped."
+icon: "code-branch"
+---
+
+## Versioning
+
+- The **path** carries the major version: `/api/v1`. A breaking change ships as `/api/v2`, and `v1` keeps working for **at least six months** afterwards with a sunset date published here.
+- `apiVersion` in every webhook envelope and in `GET /status` is the **date** of the current contract (`2026-09-01`). It changes with additive or clarifying revisions and is informational.
+- Affected endpoints send a `Deprecation` response header once a sunset is scheduled.
+
+### Breaking
+
+Removing or renaming a field · changing a field's type · changing pagination or cursor semantics · changing the signature scheme · removing an event type · tightening a rate limit.
+
+### Not breaking — may ship any time
+
+New fields · new query parameters · new endpoints · new webhook event types · new values in an enum documented as open (`type` on engagement events) · relaxing a limit.
+
+Build for this: ignore unknown fields, acknowledge unknown event types with `2xx`, and never depend on the order of keys in an object.
+
+## Changelog
+
+<Update label="2026-09-05" description="v1 · contract 2026-09-01">
+  **Initial release.**
+
+  - `GET /status`, `/calls`, `/calls/{id}`
+  - `GET /engagement/events`, `/engagement/views`, `/distributions/{id}/heatmap`
+  - `GET /decision-rooms`, `/decision-rooms/{id}`, `/decision-rooms/{id}/metrics`
+  - `GET /webhook-deliveries`
+  - Webhooks: `engagement.recorded`, `call.summary.created`, `decision_room.updated`, `decision_room.esign.updated`, `integration.ping`
+  - API keys and webhook endpoints managed from **Settings → Integrations → API access**
+</Update>
+
+<Note>
+  The next breaking change will appear here as `v2`, with a migration note and the `v1` sunset date, before it ships.
+</Note>

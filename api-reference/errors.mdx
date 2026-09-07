@@ -1,0 +1,39 @@
+---
+title: "Errors"
+description: "One JSON shape, stable machine codes, and which ones are worth retrying."
+icon: "triangle-exclamation"
+---
+
+Every error is JSON with the same two fields:
+
+```json
+{ "error": "cursor is not a valid cursor for this endpoint.", "code": "INVALID_CURSOR" }
+```
+
+`code` is stable and safe to branch on. `error` is for humans and may change.
+
+## Codes
+
+| Status | `code` | Meaning | Retry? |
+|---|---|---|---|
+| 400 | `INVALID_CURSOR` | Cursor is malformed or from a different endpoint | No — fix the request |
+| 400 | `INVALID_TIMESTAMP` | `since` / `updated_since` is not ISO-8601 | No |
+| 400 | `INVALID_ID` | A UUID parameter is not a UUID | No |
+| 400 | `INVALID_KIND` | `kind` is not `demo`, `qualifying_call`, or `meeting` | No |
+| 400 | `INVALID_STATUS` | `status` is not a known value | No |
+| 401 | `API_KEY_REQUIRED` · `API_KEY_INVALID` · `API_KEY_REVOKED` | See [Authentication](/api-reference/authentication#errors) | No |
+| 403 | `FEATURE_NOT_ENABLED` | The API is not enabled for this workspace | No |
+| 404 | `NOT_FOUND` | The id does not exist **or belongs to another workspace** | No |
+| 429 | `RATE_LIMITED` | Over 300 requests/minute for this key | Yes, after `Retry-After` |
+| 503 | `API_KEY_CHECK_UNAVAILABLE` | Transient failure verifying the key | Yes, with backoff |
+| 5xx | — | Transient server error | Yes, with backoff |
+
+## A retry policy that behaves
+
+- **4xx (except 429):** do not retry. The request will fail the same way again. Log it and move on.
+- **429:** wait `Retry-After` seconds, then retry once.
+- **5xx and network errors:** exponential backoff starting at a couple of seconds, capped at about 30 seconds, for a handful of attempts. Then surface the failure — a feed that has been failing for an hour needs a human.
+
+<Note>
+  `404` for an id you were previously given is not an error in your code. The object may have been deleted, or the share link revoked. Treat it as "gone" and keep the local copy you already have — engagement history does not become less true because the link it came through was retired.
+</Note>

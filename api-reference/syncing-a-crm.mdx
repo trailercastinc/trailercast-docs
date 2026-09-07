@@ -1,0 +1,58 @@
+---
+title: "Syncing a CRM"
+description: "The recommended pattern for keeping a system of record current, and how TrailerCast objects map onto deals, contacts, and activities."
+icon: "arrows-rotate"
+---
+
+This page is the integration TrailerCast's own CRM connector implements. Nothing here is specific to that CRM; it is the shape any system of record ends up with.
+
+## The pattern
+
+<Steps>
+  <Step title="Backfill once">
+    Page `/calls?has_summary=true`, `/decision-rooms` (then `/decision-rooms/{id}/metrics` for each), and `/engagement/events` from an empty cursor until `hasMore` is false. Store each feed's `nextCursor`.
+  </Step>
+  <Step title="Poll incrementally">
+    Every few minutes, call each feed with its stored cursor and upsert whatever comes back on `id`. Store the new cursor.
+  </Step>
+  <Step title="React to webhooks">
+    Verify the signature, dedupe on the envelope `id`, apply the payload, then schedule an incremental pass a few seconds out. The webhook gets you latency; the cursor gets you completeness.
+  </Step>
+</Steps>
+
+## Entity mapping
+
+| TrailerCast | Your CRM | Join key | Notes |
+|---|---|---|---|
+| Decision Room (`buyerSpaceId`) | Deal / Opportunity | Your stored room→deal link | A room maps to **at most one** deal. Keep the mapping on your side; TrailerCast does not know your deal ids. |
+| Call participants, event `actor`, room `stakeholders[]` | Contact | Email, lower-cased | `isInternal` on a call participant marks your own reps — skip those. |
+| Room `owner`, call `owner` | Deal owner (user) | Email | |
+| `call.summary.created` | Logged call / meeting activity | Call `id` | Regeneration re-sends the same call id with a newer `updatedAt` — update in place. |
+| `engagement.recorded` | Timeline entry | `tc:<event id>` | Use a prefixed key so TrailerCast ids cannot collide with other sources. |
+| `summary.nextSteps` + `summary.actionItems` | Tasks | `<call id>:<index>` | Cap per call; dedupe titles across the two arrays. |
+| Room `status` → `won` / `lost` | Deal stage **suggestion** | | Surface it — do not move stages automatically. A rep decides; TrailerCast supplies the evidence. |
+| Room `dealValueCents`, `expectedCloseDate` | Deal amount / close date | | Integer cents; calendar date, no time zone. |
+| Room metrics `engagementScore`, `esign.status` | Custom fields | | Snapshot, not history — overwrite. |
+
+## Attribution when no room is linked
+
+Engagement and calls arrive before a rep links the room to a deal. Two rules that hold up:
+
+1. **Store it anyway.** An event you cannot place yet is history you cannot get back later. Keep it keyed by `buyerSpaceId` and attach it the moment the link is made.
+2. **Fall back to a person on exactly one open deal.** If an event's `actor.email` matches a contact who sits on precisely one open deal, that attribution is safe. If they sit on two, refuse to guess — a confidently wrong attribution makes a dead deal look alive, which is the failure the engagement data exists to prevent.
+
+## Idempotency
+
+Every path can be hit twice for the same fact: TrailerCast retries webhooks, and your poll overlaps your webhook handler by design. Dedupe **before** aggregating, not after — watch-time totals inflate silently if a retry is counted twice, and nothing will look wrong.
+
+| Source | Idempotency key |
+|---|---|
+| Webhook delivery | envelope `id` |
+| Pulled object | object `id` (upsert) |
+| Engagement event via either path | event `id` — the same integer whether pushed or pulled |
+
+## Things not to do
+
+- **Do not treat `lastActivityAt` on a room as a buyer signal on its own.** It moves on seller edits too. Use `/decision-rooms/{id}/metrics` → `totals.lastActivityAt`, which is buyer-only.
+- **Do not create contacts for every participant.** Filter on `isInternal === false` and require an email; a name-only participant cannot be deduplicated.
+- **Do not poll `/decision-rooms/{id}/metrics` for every room on every tick.** Fetch metrics for rooms that appeared in the latest `/decision-rooms` page — those are the ones that changed.

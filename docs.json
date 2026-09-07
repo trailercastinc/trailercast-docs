@@ -102,6 +102,76 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "API reference",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/quickstart",
+              "api-reference/authentication",
+              "api-reference/conventions"
+            ]
+          },
+          {
+            "group": "Working with data",
+            "pages": [
+              "api-reference/pagination",
+              "api-reference/rate-limits",
+              "api-reference/errors",
+              "api-reference/syncing-a-crm"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/overview",
+              "api-reference/webhooks/events",
+              "api-reference/webhooks/verify-signatures",
+              "api-reference/webhooks/delivery"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/endpoint/status",
+              "api-reference/endpoint/list-calls",
+              "api-reference/endpoint/get-call",
+              "api-reference/endpoint/list-engagement-events",
+              "api-reference/endpoint/list-views",
+              "api-reference/endpoint/get-heatmap",
+              "api-reference/endpoint/list-rooms",
+              "api-reference/endpoint/get-room",
+              "api-reference/endpoint/get-room-metrics",
+              "api-reference/endpoint/list-deliveries"
+            ]
+          },
+          {
+            "group": "Management (admin session)",
+            "pages": [
+              "api-reference/management/list-api-keys",
+              "api-reference/management/create-api-key",
+              "api-reference/management/revoke-api-key",
+              "api-reference/management/list-webhooks",
+              "api-reference/management/create-webhook",
+              "api-reference/management/update-webhook",
+              "api-reference/management/delete-webhook",
+              "api-reference/management/rotate-webhook-secret",
+              "api-reference/management/test-webhook",
+              "api-reference/management/list-webhook-deliveries",
+              "api-reference/management/retry-webhook-delivery"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "api-reference/versioning"
+            ]
+          }
+        ]
       }
     ]
   },

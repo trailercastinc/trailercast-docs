@@ -1,0 +1,119 @@
+---
+title: "Event types"
+description: "What each webhook carries in `data`, and when it fires."
+icon: "list-ul"
+---
+
+Every event uses the [envelope](/api-reference/webhooks/overview#the-envelope). This page describes `data` per `type`. Payload objects are the same shapes the pull endpoints return, so the [endpoint reference](/api-reference/endpoint/list-calls) is the field-level source of truth.
+
+## `engagement.recorded`
+
+**Fires:** every time a prospect action is recorded — a trailer view, a document open, a Decision Room visit, an action-plan check-off, a message, a forward.
+
+**`data`:** one [engagement event](/api-reference/endpoint/list-engagement-events).
+
+```json
+{
+  "id": "123",
+  "type": "trailer_view",
+  "occurredAt": "2026-09-04T18:21:07.000Z",
+  "actor": { "name": "Sarah Chen", "email": "sarah@acme.com" },
+  "demoId": "9f8d6c2a-…",
+  "demoTitle": "Acme demo.mp4",
+  "distributionId": "0c2e…",
+  "forwardedFromDistributionId": null,
+  "buyerSpaceId": "1b7c…",
+  "docId": null,
+  "metadata": { "atSeconds": 0 }
+}
+```
+
+This is the chattiest event — a busy room can produce dozens an hour. Subscribe to it when you want per-action timelines; if you only need roll-ups, poll `/decision-rooms/{id}/metrics` instead.
+
+Engagement `type` values and their `metadata`:
+
+| `type` | Meaning | `metadata` |
+|---|---|---|
+| `trailer_view` | Share link opened / playback started | `atSeconds` |
+| `trailer_complete` | Watched to the end | |
+| `cta_click` | Call-to-action clicked | |
+| `chapter_click` | Jumped to a chapter | `chapterIndex`, `chapterTitle` |
+| `source_open` | Opened the full recording behind the trailer | `atSeconds` |
+| `space_visit` | Opened the Decision Room | |
+| `doc_view` / `doc_complete` | Opened / finished a shared document | `libraryAssetId`, `docTitle` |
+| `doc_download` | Downloaded a document | |
+| `doc_upload` | Prospect uploaded a file into the room | |
+| `map_checkoff` | Prospect ticked a mutual-action-plan item | |
+| `map_comment` | Prospect commented on a plan item | |
+| `message` | Prospect sent a message | |
+| `forward` | Prospect forwarded the link to a colleague | `recipientName`, `recipientEmail` |
+
+New types may be added without notice; store what you do not recognise.
+
+## `call.summary.created`
+
+**Fires:** when an AI summary is generated for a call, and again if it is regenerated (for example after the call is re-tagged from meeting to discovery call).
+
+**`data`:** one [Call](/api-reference/endpoint/get-call), including `summary`, `participants`, and `owner`.
+
+Upsert on `data.id`. A regenerated summary arrives with the same call id and a newer `updatedAt`.
+
+## `decision_room.updated`
+
+**Fires:** when a room's deal-relevant fields change — `status`, `dealValueCents`, `expectedCloseDate`, `primaryContactEmail`, or `name`. Both a rep editing the room and the automatic flip to `won` when a tracked contract completes produce this event. Content-only edits (welcome copy, section visibility) do not.
+
+**`data`:**
+
+```json
+{
+  "room": { …Room… },
+  "changes": {
+    "status": { "from": "open", "to": "won" }
+  },
+  "reason": "esign_completed"
+}
+```
+
+| Field | Notes |
+|---|---|
+| `room` | The full [Room](/api-reference/endpoint/get-room) after the change |
+| `changes` | Field → `{ from, to }`, keyed by the room's column name: `status`, `deal_value_cents`, `expected_close_date`, `primary_contact_email`, `prospect_company_name` |
+| `reason` | `edited` (a rep changed it) or `esign_completed` (contract signed → automatic Won) |
+
+<Tip>
+  A `status` change to `won` or `lost` is the strongest deal-stage signal TrailerCast produces. Surface it to the rep; do not move their pipeline stage for them.
+</Tip>
+
+## `decision_room.esign.updated`
+
+**Fires:** when a tracked eSignature envelope attached to a room changes status (sent → delivered → viewed → signed → completed / declined / voided).
+
+**`data`:**
+
+```json
+{
+  "buyerSpaceId": "1b7c…",
+  "document": {
+    "id": "9",
+    "vendor": "docusign",
+    "envelopeId": "a1b2…",
+    "subject": "Master Services Agreement",
+    "status": "viewed",
+    "insertedEvents": 1
+  }
+}
+```
+
+The room's overall `esign.status` (highest-ranked envelope) is on `/decision-rooms/{id}/metrics`.
+
+## `integration.ping`
+
+**Fires:** only when an admin clicks **Send test** on an endpoint.
+
+**`data`:** `{ "message": "Hello from TrailerCast. …" }`
+
+Respond `2xx`. Nothing to store.
+
+## Not events (yet)
+
+Creating a Decision Room, adding a person to its committee, or uploading a document does **not** emit a webhook today. Those changes reach you on the next incremental pull of `/decision-rooms` and its metrics, which is another reason to keep the poll running alongside webhooks.

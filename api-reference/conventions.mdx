@@ -1,0 +1,52 @@
+---
+title: "Conventions"
+description: "IDs, timestamps, tenancy, privacy, and what the API deliberately does not return."
+icon: "ruler"
+---
+
+## Identifiers
+
+| Object | Type | Example |
+|---|---|---|
+| Call | UUID | `9f8d6c2a-1111-4222-8333-444455556666` |
+| Decision Room (`buyerSpaceId`) | UUID | `1b7c…` |
+| Distribution (share link / prospect identity) | UUID | `0c2e…` |
+| Engagement event, view | integer, serialised as a **string** | `"123"` |
+| eSignature document | integer, serialised as a string | `"9"` |
+| Workspace (`companyId`) | integer | `5` |
+| User (`owner.id`) | integer | `42` |
+
+Integers that can exceed 2<sup>53</sup> are sent as strings. Treat every id as opaque — never parse structure out of one, and never assume ids are dense or ordered except where a page explicitly says so (event cursors).
+
+## Timestamps and dates
+
+- Every timestamp is **ISO-8601 in UTC** with milliseconds: `2026-09-01T10:00:00.000Z`.
+- `expectedCloseDate` on a Decision Room is a **calendar date** with no time zone, formatted `YYYY-MM-DD`. Do not convert it to a `Date` at local midnight — it will render as the previous day for anyone west of UTC.
+- Filter parameters (`since`, `updated_since`) accept any ISO-8601 string. An unparseable value returns `400 INVALID_TIMESTAMP`.
+
+## Tenancy
+
+Everything is scoped to the key's workspace **in the database query**, not by a filter you supply. Consequences worth knowing:
+
+- An id that belongs to another workspace returns `404 NOT_FOUND`, indistinguishable from an id that does not exist. The API never confirms that something exists elsewhere.
+- Engagement recorded against share links, which carry no workspace of their own, is scoped through the rep who created the link.
+
+## Privacy boundaries
+
+The API deliberately withholds some things TrailerCast holds:
+
+- **Private recordings** — a call the rep hid from their own team is never returned, even to a workspace key.
+- **Seller previews** — a rep opening their own share link to check it is excluded from every engagement feed.
+- **Viewer location** — only a daily-salted hash of the viewer's IP is stored, so no endpoint can return a location. `location` is always `null`.
+- **Transcripts and media** — summaries and topic timestamps are exposed; the recording, transcript text, and document files are not.
+- **Room content** — welcome copy, ROI narrative, and the documents themselves are not returned; their engagement is.
+
+## Field stability
+
+- Fields documented as nullable will be `null`, never absent, when there is no value — you can rely on the key existing.
+- Arrays are `[]` when empty, never `null`.
+- **Nothing is invented.** A call summary field the AI did not produce is `null` or `[]`. In particular the summarisers do not produce objections or sentiment today; `painPoints`, `openQuestions`, and `qualificationVerdict` are the nearest signals. See [What is not available](/api-reference/introduction#availability).
+
+## Unknown fields and event types
+
+New fields, query parameters, endpoints, and webhook event types may be added at any time without a version bump. Consumers must ignore fields they do not recognise and acknowledge (`2xx`) webhook types they do not handle. See [Versioning](/api-reference/versioning).

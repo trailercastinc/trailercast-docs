@@ -1,0 +1,101 @@
+---
+title: "Quickstart"
+description: "Create an API key, make your first request, and receive your first webhook."
+icon: "rocket"
+---
+
+By the end of this page you will have pulled a call summary from your workspace and received a signed test event at a URL you control.
+
+## Before you start
+
+- You need to be an **admin** of your TrailerCast workspace (the same permission that connects HubSpot or Salesforce).
+- The API must be **enabled for your workspace**. If Settings → Integrations has no **API access** section, it is not on yet — ask [hello@trailercast.io](mailto:hello@trailercast.io).
+- For the webhook half you need an HTTPS URL that can receive a `POST`. For a quick experiment, a request bin or a tunnel to your laptop is fine.
+
+<Steps>
+  <Step title="Create an API key">
+    Open **Settings → Integrations → API access** and click **Create key**. Give it a name that says which system will hold it — "HubSpot sync", "Snowflake loader" — and click **Create**.
+
+    <Warning>
+      The key is shown **once**. Copy it into your secret store before closing the dialog. Only a hash is kept on our side; if you lose it, revoke it and create another.
+    </Warning>
+
+    Keys look like `tck_live_` followed by 43 URL-safe characters. Your API host is shown on the same screen.
+  </Step>
+
+  <Step title="Confirm the key works">
+    <CodeGroup>
+    ```bash curl
+    curl https://YOUR_HOST/api/v1/status \
+      -H "Authorization: Bearer tck_live_…"
+    ```
+    ```javascript Node.js
+    const res = await fetch('https://YOUR_HOST/api/v1/status', {
+      headers: { Authorization: `Bearer ${process.env.TRAILERCAST_API_KEY}` },
+    });
+    console.log(await res.json());
+    ```
+    ```python Python
+    import os, requests
+    r = requests.get(
+        "https://YOUR_HOST/api/v1/status",
+        headers={"Authorization": f"Bearer {os.environ['TRAILERCAST_API_KEY']}"},
+    )
+    print(r.json())
+    ```
+    </CodeGroup>
+
+    ```json Response
+    {
+      "ok": true,
+      "apiVersion": "2026-09-01",
+      "company": { "id": 5, "name": "Acme" },
+      "key": { "prefix": "tck_live_Ab1", "name": "HubSpot sync", "scopes": ["read"], "createdAt": "…", "lastUsedAt": null },
+      "webhooks": { "endpoints": 0, "enabledEndpoints": 0, "pendingDeliveries": 0, "deadDeliveries": 0, "lastDeliveredAt": null },
+      "rateLimit": { "perMinute": 300 }
+    }
+    ```
+
+    `company.id` is your workspace. Everything the key returns belongs to it.
+  </Step>
+
+  <Step title="Pull your most recent calls">
+    ```bash
+    curl "https://YOUR_HOST/api/v1/calls?has_summary=true&limit=5" \
+      -H "Authorization: Bearer tck_live_…"
+    ```
+
+    Each item in `data` is a [Call](/api-reference/endpoint/list-calls) with a normalised `summary`. Note the `nextCursor` in the response — pass it back as `?cursor=` to page, and store it to pick up only what changed next time. See [Pagination](/api-reference/pagination).
+  </Step>
+
+  <Step title="Register a webhook endpoint">
+    Back on **Settings → Integrations → API access**, under **Webhook endpoints** click **Add endpoint**. Enter your HTTPS URL, leave **All events** selected, and click **Add**.
+
+    <Warning>
+      The signing **secret** (`whsec_…`) is shown once. Store it next to your key — you need it to verify every delivery.
+    </Warning>
+  </Step>
+
+  <Step title="Send yourself a test event">
+    Click **Send test** on the endpoint. TrailerCast POSTs an `integration.ping` to your URL immediately and shows the response code it got back. A `2xx` means you are receiving deliveries.
+
+    The request carries an `X-TrailerCast-Signature` header. Before you act on any real event, [verify that signature](/api-reference/webhooks/verify-signatures) — it is the only thing that proves the request came from TrailerCast.
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Syncing a CRM" icon="arrows-rotate" href="/api-reference/syncing-a-crm">
+    The backfill → incremental → webhook pattern, and how TrailerCast objects map to deals, contacts, and activities.
+  </Card>
+  <Card title="Webhook events" icon="bolt" href="/api-reference/webhooks/events">
+    What each event type carries and when it fires.
+  </Card>
+  <Card title="Rate limits" icon="gauge" href="/api-reference/rate-limits">
+    300 requests a minute per key, and how to stay under it while backfilling.
+  </Card>
+  <Card title="OpenAPI spec" icon="file-code" href="https://raw.githubusercontent.com/trailercastinc/trailercast-docs/main/api-reference/openapi.yaml">
+    Import into Postman, Insomnia, or a client generator.
+  </Card>
+</CardGroup>

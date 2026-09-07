@@ -1,0 +1,1132 @@
+openapi: 3.1.0
+info:
+  title: TrailerCast Integration API
+  version: "1.0.0"
+  summary: Read-only access to call summaries, prospect engagement and Decision Room metrics, plus signed webhooks.
+  description: |
+    Read-only, workspace-scoped API for pulling the deal signals TrailerCast captures during a sale,
+    and outbound webhooks for near-real-time notification. Start with the guides in this section (Introduction, Quickstart, Authentication, Webhooks); the endpoint pages below are generated from this spec.
+
+    **Authentication.** Data endpoints take an API key: `Authorization: Bearer tck_live_…`.
+    Management endpoints take an admin session JWT with the `integrations.crm` permission.
+
+    **Pagination.** Every list is keyset-paginated and ascending: `{ data, nextCursor, hasMore }`.
+    Pass `cursor=<nextCursor>` to continue. `limit` 1–500, default 100.
+
+    **Rate limit.** 300 requests/minute per API key; `429` with `Retry-After` when exceeded.
+
+    **Versioning.** Breaking changes ship as a new path (`/api/v2`). Additive changes (new fields,
+    event types, parameters) may ship at any time; ignore what you do not recognise.
+  contact:
+    name: TrailerCast
+    url: https://trailercast.io
+servers:
+  - url: https://{host}/api/v1
+    variables:
+      host:
+        default: trailercst-backend-production.up.railway.app
+        description: Your TrailerCast API host.
+  - url: http://localhost:5000/api/v1
+    description: Local development
+
+tags:
+  - name: Status
+  - name: Calls
+  - name: Engagement
+  - name: Decision Rooms
+  - name: Webhook deliveries
+  - name: Management — API keys
+  - name: Management — Webhooks
+
+security:
+  - apiKey: []
+
+paths:
+  /status:
+    get:
+      tags: [Status]
+      summary: Confirm the key works and report webhook health
+      operationId: getStatus
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Status" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/FeatureNotEnabled" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+
+  /calls:
+    get:
+      tags: [Calls]
+      summary: List completed calls with AI summaries, oldest-updated first
+      operationId: listCalls
+      parameters:
+        - $ref: "#/components/parameters/cursorOpaque"
+        - $ref: "#/components/parameters/limit"
+        - name: updated_since
+          in: query
+          schema: { type: string, format: date-time }
+          description: Only calls updated at or after this instant (ISO-8601).
+        - name: kind
+          in: query
+          schema: { type: string, enum: [demo, qualifying_call, meeting] }
+        - name: buyer_space_id
+          in: query
+          schema: { type: string, format: uuid }
+          description: Only calls attached to this Decision Room.
+        - name: has_summary
+          in: query
+          schema: { type: string, enum: ["true"] }
+          description: Only calls with an AI summary.
+      responses:
+        "200":
+          description: A page of calls
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Page"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Call" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+
+  /calls/{id}:
+    get:
+      tags: [Calls]
+      summary: One call
+      operationId: getCall
+      parameters:
+        - $ref: "#/components/parameters/uuidId"
+      responses:
+        "200":
+          description: The call
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/Call" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /engagement/events:
+    get:
+      tags: [Engagement]
+      summary: Unified feed of prospect actions, in recorded order
+      operationId: listEngagementEvents
+      parameters:
+        - $ref: "#/components/parameters/cursorNumeric"
+        - $ref: "#/components/parameters/limit"
+        - name: since
+          in: query
+          schema: { type: string, format: date-time }
+        - name: types
+          in: query
+          schema: { type: string }
+          description: Comma-separated event types, e.g. `trailer_view,doc_download` (max 20).
+        - name: buyer_space_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: demo_id
+          in: query
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: A page of events
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Page"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/EngagementEvent" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /engagement/views:
+    get:
+      tags: [Engagement]
+      summary: View telemetry — watch time, completion, device
+      operationId: listViews
+      parameters:
+        - $ref: "#/components/parameters/cursorNumeric"
+        - $ref: "#/components/parameters/limit"
+        - name: since
+          in: query
+          schema: { type: string, format: date-time }
+        - name: demo_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: buyer_space_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: distribution_id
+          in: query
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: A page of views
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Page"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/View" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /distributions/{id}/heatmap:
+    get:
+      tags: [Engagement]
+      summary: Playback heat-map and drop-off for one share link
+      operationId: getHeatmap
+      parameters:
+        - $ref: "#/components/parameters/uuidId"
+      responses:
+        "200":
+          description: The heat-map
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/Heatmap" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /decision-rooms:
+    get:
+      tags: [Decision Rooms]
+      summary: List Decision Rooms, least-recently-active first
+      operationId: listRooms
+      parameters:
+        - $ref: "#/components/parameters/cursorOpaque"
+        - $ref: "#/components/parameters/limit"
+        - name: updated_since
+          in: query
+          schema: { type: string, format: date-time }
+          description: Rooms whose lastActivityAt is at or after this instant.
+        - name: status
+          in: query
+          schema: { type: string, enum: [open, won, lost, dormant] }
+      responses:
+        "200":
+          description: A page of rooms
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Page"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Room" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  /decision-rooms/{id}:
+    get:
+      tags: [Decision Rooms]
+      summary: One Decision Room
+      operationId: getRoom
+      parameters:
+        - $ref: "#/components/parameters/uuidId"
+      responses:
+        "200":
+          description: The room
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/Room" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /decision-rooms/{id}/metrics:
+    get:
+      tags: [Decision Rooms]
+      summary: Everything that happened in one room, rolled up
+      operationId: getRoomMetrics
+      parameters:
+        - $ref: "#/components/parameters/uuidId"
+      responses:
+        "200":
+          description: The metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/RoomMetrics" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /webhook-deliveries:
+    get:
+      tags: [Webhook deliveries]
+      summary: Recent webhook deliveries to this workspace's endpoints
+      operationId: listDeliveries
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string, enum: [pending, delivered, dead] }
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Deliveries, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Delivery" }
+
+  # ── Management (admin session) ─────────────────────────────────────
+  /api-keys:
+    get:
+      tags: [Management — API keys]
+      summary: List API keys
+      security: [{ sessionJwt: [] }]
+      responses:
+        "200":
+          description: Keys (never the plaintext)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/ApiKey" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [Management — API keys]
+      summary: Mint an API key (plaintext returned once)
+      security: [{ sessionJwt: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, maxLength: 120, example: Acme CRM }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key: { type: string, description: The plaintext key. Shown once., example: tck_live_… }
+                  data: { $ref: "#/components/schemas/ApiKey" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api-keys/{id}:
+    delete:
+      tags: [Management — API keys]
+      summary: Revoke an API key
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+      responses:
+        "200":
+          description: Revoked (idempotent)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/ApiKey" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /webhooks:
+    get:
+      tags: [Management — Webhooks]
+      summary: List webhook endpoints
+      security: [{ sessionJwt: [] }]
+      responses:
+        "200":
+          description: Endpoints and the available event types
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/WebhookEndpoint" }
+                  eventTypes:
+                    type: array
+                    items: { type: string }
+    post:
+      tags: [Management — Webhooks]
+      summary: Register a webhook endpoint (secret returned once)
+      security: [{ sessionJwt: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url: { type: string, format: uri, description: https, public host, no embedded credentials. }
+                events:
+                  type: array
+                  items: { type: string }
+                  default: ["*"]
+                  description: Event types to receive, or ["*"].
+                description: { type: string, maxLength: 200 }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secret: { type: string, description: Signing secret. Shown once., example: whsec_… }
+                  data: { $ref: "#/components/schemas/WebhookEndpoint" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  /webhooks/{id}:
+    patch:
+      tags: [Management — Webhooks]
+      summary: Update an endpoint
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url: { type: string, format: uri }
+                events: { type: array, items: { type: string } }
+                description: { type: string }
+                enabled: { type: boolean, description: true also clears disabledReason and the failure counter. }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/WebhookEndpoint" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Management — Webhooks]
+      summary: Delete an endpoint (pending deliveries are dropped)
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+      responses:
+        "204": { description: Deleted }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /webhooks/{id}/rotate-secret:
+    post:
+      tags: [Management — Webhooks]
+      summary: Rotate the signing secret (new secret returned once)
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+      responses:
+        "200":
+          description: Rotated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secret: { type: string }
+                  data: { $ref: "#/components/schemas/WebhookEndpoint" }
+
+  /webhooks/{id}/test:
+    post:
+      tags: [Management — Webhooks]
+      summary: Send an integration.ping now and report the endpoint's response
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+      responses:
+        "200":
+          description: Attempted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  outcome: { type: string, enum: [delivered, retry, dead] }
+                  delivery: { $ref: "#/components/schemas/Delivery" }
+
+  /webhooks/{id}/deliveries:
+    get:
+      tags: [Management — Webhooks]
+      summary: Delivery log for one endpoint
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+        - name: status
+          in: query
+          schema: { type: string, enum: [pending, delivered, dead] }
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Deliveries, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Delivery" }
+
+  /webhooks/{id}/deliveries/{deliveryId}/retry:
+    post:
+      tags: [Management — Webhooks]
+      summary: Re-queue a dead or pending delivery for immediate retry
+      security: [{ sessionJwt: [] }]
+      parameters:
+        - $ref: "#/components/parameters/intId"
+        - name: deliveryId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Re-queued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/Delivery" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+# ── Outbound webhooks ────────────────────────────────────────────────
+webhooks:
+  engagement.recorded:
+    post:
+      summary: A prospect action was recorded
+      description: |
+        Signed with `X-TrailerCast-Signature: t=<unix>,v1=<hex HMAC-SHA256>` over `${t}.${rawBody}`.
+        At-least-once, unordered; dedupe on the envelope `id`. Respond 2xx within 10 s.
+        Retries 30s · 2m · 10m · 30m · 2h · 6h · 12h · 24h, then dead-lettered.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Envelope"
+                - type: object
+                  properties:
+                    type: { const: engagement.recorded }
+                    data: { $ref: "#/components/schemas/EngagementEvent" }
+      responses:
+        "200": { description: Acknowledged }
+  call.summary.created:
+    post:
+      summary: An AI summary was generated or regenerated for a call
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Envelope"
+                - type: object
+                  properties:
+                    type: { const: call.summary.created }
+                    data: { $ref: "#/components/schemas/Call" }
+      responses:
+        "200": { description: Acknowledged }
+  decision_room.updated:
+    post:
+      summary: A room's deal-relevant fields changed (status, value, close date, contact, name)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Envelope"
+                - type: object
+                  properties:
+                    type: { const: decision_room.updated }
+                    data:
+                      type: object
+                      properties:
+                        room: { $ref: "#/components/schemas/Room" }
+                        changes:
+                          type: object
+                          description: Field → { from, to }, keyed by the room's snake_case column name (e.g. status, deal_value_cents, expected_close_date).
+                          additionalProperties:
+                            type: object
+                            properties:
+                              from: {}
+                              to: {}
+                        reason: { type: string, enum: [edited, esign_completed] }
+      responses:
+        "200": { description: Acknowledged }
+  decision_room.esign.updated:
+    post:
+      summary: A tracked eSignature envelope in a room changed status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Envelope"
+                - type: object
+                  properties:
+                    type: { const: decision_room.esign.updated }
+                    data:
+                      type: object
+                      properties:
+                        buyerSpaceId: { type: string, format: uuid }
+                        document:
+                          type: object
+                          properties:
+                            id: { type: string }
+                            vendor: { type: string, example: docusign }
+                            envelopeId: { type: string }
+                            subject: { type: [string, "null"] }
+                            status: { $ref: "#/components/schemas/EsignStatus" }
+                            insertedEvents: { type: integer }
+      responses:
+        "200": { description: Acknowledged }
+  integration.ping:
+    post:
+      summary: Sent by POST /webhooks/{id}/test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Envelope"
+                - type: object
+                  properties:
+                    type: { const: integration.ping }
+                    data:
+                      type: object
+                      properties:
+                        message: { type: string }
+      responses:
+        "200": { description: Acknowledged }
+
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: tck_live_…
+      description: Workspace API key minted via POST /api-keys. Read-only.
+    sessionJwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Admin session token (integrations.crm permission). Management endpoints only.
+
+  parameters:
+    limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+    cursorOpaque:
+      name: cursor
+      in: query
+      schema: { type: string }
+      description: Opaque cursor from a previous nextCursor. Only valid for this endpoint.
+    cursorNumeric:
+      name: cursor
+      in: query
+      schema: { type: string, pattern: "^\\d{1,18}$" }
+      description: The last id you have (integer string). Rows with a greater id are returned.
+    uuidId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    intId:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer }
+
+  responses:
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: cursor is not a valid cursor for this endpoint., code: INVALID_CURSOR }
+    Unauthorized:
+      description: Missing, invalid or revoked API key; or a session token on a data endpoint
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: Invalid API key., code: API_KEY_INVALID }
+    Forbidden:
+      description: Permission denied
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: You do not have permission to perform this action., code: PERMISSION_DENIED }
+    FeatureNotEnabled:
+      description: The Integration API is not enabled for this workspace
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: The Integration API is not enabled for this workspace., code: FEATURE_NOT_ENABLED }
+    NotFound:
+      description: Not found — or belongs to another workspace (indistinguishable by design)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: Not found, code: NOT_FOUND }
+    RateLimited:
+      description: Rate limit exceeded (300/min per key)
+      headers:
+        Retry-After:
+          schema: { type: integer }
+          description: Seconds to wait
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string, description: Human-readable; not stable. }
+        code: { type: string, description: Stable machine code. }
+
+    Page:
+      type: object
+      required: [data, nextCursor, hasMore]
+      properties:
+        data: { type: array, items: {} }
+        nextCursor:
+          type: [string, "null"]
+          description: Pass back as `cursor`. Returned even when hasMore is false so you can resume later. Never expires.
+        hasMore: { type: boolean }
+
+    Owner:
+      type: object
+      properties:
+        id: { type: integer, example: 42 }
+        name: { type: [string, "null"] }
+        email: { type: [string, "null"], format: email }
+
+    Status:
+      type: object
+      properties:
+        ok: { type: boolean }
+        apiVersion: { type: string, example: "2026-09-01" }
+        company:
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: [string, "null"] }
+        key:
+          type: object
+          properties:
+            prefix: { type: string, example: tck_live_Ab1 }
+            name: { type: [string, "null"] }
+            scopes: { type: array, items: { type: string } }
+            createdAt: { type: [string, "null"], format: date-time }
+            lastUsedAt: { type: [string, "null"], format: date-time }
+        webhooks:
+          type: object
+          properties:
+            endpoints: { type: integer }
+            enabledEndpoints: { type: integer }
+            pendingDeliveries: { type: integer }
+            deadDeliveries: { type: integer }
+            lastDeliveredAt: { type: [string, "null"], format: date-time }
+        rateLimit:
+          type: object
+          properties:
+            perMinute: { type: integer, example: 300 }
+
+    Participant:
+      type: object
+      properties:
+        name: { type: [string, "null"] }
+        email: { type: [string, "null"], format: email, description: Lower-cased. }
+        role: { type: [string, "null"], description: Rep-entered role, free text. }
+        isHost: { type: boolean }
+        isInternal: { type: boolean, description: The seller's side (host, self, or the owner's email domain). }
+        talkSeconds: { type: [number, "null"] }
+        talkPercent: { type: [number, "null"] }
+        sources:
+          type: array
+          items: { type: string, enum: [calendar, talk_time, attendees] }
+
+    Topic:
+      type: object
+      properties:
+        label: { type: [string, "null"] }
+        summary: { type: [string, "null"] }
+        startSeconds: { type: [number, "null"] }
+        endSeconds: { type: [number, "null"] }
+
+    CallSummary:
+      type: object
+      description: Normalised AI summary. Fields the schema does not produce are null / []. Nothing is invented.
+      properties:
+        schema: { type: string, enum: [meeting, qualifying_call] }
+        headline: { type: [string, "null"] }
+        company: { type: [string, "null"] }
+        participants: { type: array, items: { type: string }, description: Free-text names/roles from the AI. }
+        keyTakeaways: { type: array, items: { type: string } }
+        decisions: { type: array, items: { type: string } }
+        actionItems: { type: array, items: { type: string } }
+        nextSteps: { type: array, items: { type: string } }
+        openQuestions: { type: array, items: { type: string } }
+        painPoints: { type: array, items: { type: string } }
+        currentState: { type: array, items: { type: string } }
+        desiredOutcomes: { type: array, items: { type: string } }
+        decisionCriteria: { type: array, items: { type: string } }
+        timeline: { type: [string, "null"] }
+        budgetSignals: { type: [string, "null"] }
+        qualificationVerdict: { type: [string, "null"], enum: [qualified, maybe, not_qualified, null] }
+        verdictReasoning: { type: [string, "null"] }
+        contextForNextCall: { type: [string, "null"] }
+        topics: { type: array, items: { $ref: "#/components/schemas/Topic" } }
+
+    Call:
+      type: object
+      required: [id, kind, status, occurredAt, updatedAt, owner, participants, hasSummary]
+      properties:
+        id: { type: string, format: uuid }
+        kind: { type: string, enum: [demo, qualifying_call, meeting] }
+        title: { type: [string, "null"] }
+        prospectName: { type: [string, "null"] }
+        status: { type: string, example: completed }
+        occurredAt: { type: string, format: date-time }
+        completedAt: { type: [string, "null"], format: date-time }
+        updatedAt: { type: string, format: date-time, description: Bumps when the summary is regenerated. }
+        durationSeconds: { type: [integer, "null"] }
+        owner: { $ref: "#/components/schemas/Owner" }
+        buyerSpaceId: { type: [string, "null"], format: uuid }
+        participants: { type: array, items: { $ref: "#/components/schemas/Participant" } }
+        talkTime:
+          type: [object, "null"]
+          properties:
+            source: { type: [string, "null"], enum: [multi_track, diarized_fallback, speaker_timeline, null] }
+            totalSpeakerSeconds: { type: [number, "null"] }
+        hasSummary: { type: boolean }
+        summary:
+          oneOf:
+            - $ref: "#/components/schemas/CallSummary"
+            - type: "null"
+        deal:
+          type: object
+          description: What a connected HubSpot/Salesforce reported for this call, if any.
+          properties:
+            status: { type: [string, "null"], enum: [won, lost, pending, null] }
+            valueCents: { type: [integer, "null"] }
+        disqualifiedAt: { type: [string, "null"], format: date-time }
+        disqualifiedReason: { type: [string, "null"] }
+
+    EngagementEventType:
+      type: string
+      description: New types may be added; store what you do not recognise.
+      enum: [trailer_view, trailer_complete, cta_click, chapter_click, source_open, space_visit,
+             doc_view, doc_complete, doc_download, doc_upload, map_checkoff, map_comment, message, forward]
+
+    EngagementEvent:
+      type: object
+      required: [id, type, occurredAt, actor, metadata]
+      properties:
+        id: { type: string, example: "123", description: Integer serialised as a string. Use as the cursor. }
+        type: { $ref: "#/components/schemas/EngagementEventType" }
+        occurredAt: { type: string, format: date-time }
+        actor:
+          type: object
+          properties:
+            name: { type: [string, "null"] }
+            email: { type: [string, "null"], format: email }
+        demoId: { type: [string, "null"], format: uuid }
+        demoTitle: { type: [string, "null"] }
+        distributionId: { type: [string, "null"], format: uuid }
+        forwardedFromDistributionId: { type: [string, "null"], format: uuid }
+        buyerSpaceId: { type: [string, "null"], format: uuid }
+        docId: { type: [string, "null"], format: uuid }
+        metadata: { type: object, additionalProperties: true }
+
+    View:
+      type: object
+      properties:
+        id: { type: string, example: "5581" }
+        distributionId: { type: string, format: uuid }
+        distributionType: { type: [string, "null"], example: full_reel }
+        forwardedFromDistributionId: { type: [string, "null"], format: uuid }
+        demoId: { type: [string, "null"], format: uuid }
+        buyerSpaceId: { type: [string, "null"], format: uuid }
+        libraryAssetId: { type: [string, "null"] }
+        event: { type: string, enum: [view, progress, complete, cta_click] }
+        viewedAt: { type: string, format: date-time }
+        watchSeconds: { type: [integer, "null"] }
+        completionPercent: { type: [integer, "null"], minimum: 0, maximum: 100 }
+        viewer:
+          type: object
+          properties:
+            name: { type: [string, "null"] }
+            email: { type: [string, "null"], format: email }
+        device:
+          type: object
+          properties:
+            kind: { type: string, enum: [desktop, mobile, tablet, unknown] }
+            userAgent: { type: [string, "null"] }
+        referrer: { type: [string, "null"] }
+        location: { type: "null", description: Always null; viewer IPs are not stored. }
+
+    Heatmap:
+      type: object
+      properties:
+        distributionId: { type: string, format: uuid }
+        demoId: { type: [string, "null"], format: uuid }
+        durationSeconds: { type: [integer, "null"] }
+        bucketSeconds: { type: [number, "null"] }
+        sessions: { type: integer }
+        buckets:
+          type: array
+          items:
+            type: object
+            properties:
+              index: { type: integer }
+              startSeconds: { type: number }
+              endSeconds: { type: number }
+              sessions: { type: integer, description: Distinct playback sessions covering this slice. }
+              replays: { type: integer, description: Additional passes over this slice. }
+        dropOff:
+          type: array
+          description: Largest falls in session count, worst first (max 5).
+          items:
+            type: object
+            properties:
+              atSeconds: { type: number }
+              sessionsLost: { type: integer }
+
+    RoomStatus:
+      type: string
+      enum: [open, won, lost, dormant]
+
+    Room:
+      type: object
+      required: [id, name, status, owner, createdAt, lastActivityAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string, description: The prospect company name. }
+        slug: { type: string }
+        status: { $ref: "#/components/schemas/RoomStatus" }
+        owner: { $ref: "#/components/schemas/Owner" }
+        primaryContactEmail: { type: [string, "null"], format: email }
+        expectedCloseDate: { type: [string, "null"], format: date, description: Calendar date YYYY-MM-DD, no time zone. }
+        dealValueCents: { type: [integer, "null"] }
+        sourceCallId: { type: [string, "null"], format: uuid }
+        createdAt: { type: string, format: date-time }
+        lastActivityAt: { type: string, format: date-time }
+        closedAt: { type: [string, "null"], format: date-time }
+
+    EsignStatus:
+      type: string
+      enum: [sent, delivered, viewed, signed_partial, completed, declined, voided]
+
+    Stakeholder:
+      type: object
+      properties:
+        email: { type: [string, "null"], format: email }
+        name: { type: [string, "null"] }
+        role: { type: [string, "null"] }
+        title: { type: [string, "null"] }
+        inCommittee: { type: boolean, description: Listed in the room's People section. }
+        status: { type: string, enum: [engaged, dormant, silent] }
+        trailerViews: { type: integer }
+        trailerCompletes: { type: integer }
+        watchSeconds: { type: integer }
+        bestCompletionPercent: { type: integer }
+        roomVisits: { type: integer }
+        docOpens: { type: integer }
+        docsOpened: { type: integer }
+        mapCheckoffs: { type: integer }
+        comments: { type: integer }
+        messages: { type: integer }
+        forwards: { type: integer }
+        lastActivityAt: { type: [string, "null"], format: date-time }
+
+    RoomMetrics:
+      type: object
+      properties:
+        room: { $ref: "#/components/schemas/Room" }
+        engagementScore:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: |
+            Documented heuristic: recency (≤3d 40 · ≤7d 30 · ≤14d 20 · ≤30d 10) + breadth (10 per engaged person, max 30)
+            + depth (best completion % × 0.15 max 15, plus 5 per document opened max 15).
+        totals:
+          type: object
+          properties:
+            events: { type: integer }
+            engagedPeople: { type: integer }
+            silentPeople: { type: integer }
+            lastActivityAt: { type: [string, "null"], format: date-time }
+            trailerViews: { type: integer }
+            watchSeconds: { type: integer }
+            bestCompletionPercent: { type: integer }
+            docsOpened: { type: integer }
+        stakeholders: { type: array, items: { $ref: "#/components/schemas/Stakeholder" } }
+        trailers:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              title: { type: [string, "null"] }
+              kind: { type: string }
+              durationSeconds: { type: [integer, "null"] }
+              recipients: { type: integer }
+              views: { type: integer }
+              watchSeconds: { type: integer }
+              bestCompletionPercent: { type: integer }
+        assets:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              title: { type: string }
+              category: { type: string, example: pricing }
+              uploadedByProspect: { type: boolean }
+              libraryAssetId: { type: [string, "null"] }
+              opens: { type: integer }
+              uniqueViewers: { type: integer }
+              totalSeconds: { type: integer, description: Reading time across all viewers. }
+              lastViewedAt: { type: [string, "null"], format: date-time }
+              viewers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    distributionId: { type: string, format: uuid }
+                    email: { type: [string, "null"], format: email }
+                    name: { type: [string, "null"] }
+                    seconds: { type: integer }
+                    sessions: { type: integer }
+                    lastViewedAt: { type: [string, "null"], format: date-time }
+        actionPlan:
+          type: object
+          properties:
+            total: { type: integer }
+            done: { type: integer }
+            doneByProspect: { type: integer }
+            overdue: { type: integer }
+            lastCompletedAt: { type: [string, "null"], format: date-time }
+        conversation:
+          type: object
+          properties:
+            prospectMessages: { type: integer }
+            sellerMessages: { type: integer }
+            lastMessageAt: { type: [string, "null"], format: date-time }
+        esign:
+          type: object
+          properties:
+            status:
+              oneOf:
+                - $ref: "#/components/schemas/EsignStatus"
+                - type: "null"
+            documents:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  vendor: { type: string }
+                  envelopeId: { type: string }
+                  subject: { type: [string, "null"] }
+                  status: { $ref: "#/components/schemas/EsignStatus" }
+                  recipientCount: { type: [integer, "null"] }
+                  sentAt: { type: [string, "null"], format: date-time }
+                  firstViewedAt: { type: [string, "null"], format: date-time }
+                  lastEventAt: { type: [string, "null"], format: date-time }
+                  completedAt: { type: [string, "null"], format: date-time }
+                  declinedAt: { type: [string, "null"], format: date-time }
+
+    Envelope:
+      type: object
+      required: [id, type, apiVersion, createdAt, companyId, data]
+      properties:
+        id: { type: string, format: uuid, description: Idempotency key. Same across every endpoint receiving this event. }
+        type: { type: string }
+        apiVersion: { type: string, example: "2026-09-01" }
+        createdAt: { type: string, format: date-time }
+        companyId: { type: integer }
+        data: { type: object }
+
+    Delivery:
+      type: object
+      properties:
+        id: { type: string }
+        endpointId: { type: integer }
+        eventId: { type: string, format: uuid }
+        eventType: { type: string }
+        status: { type: string, enum: [pending, delivered, dead] }
+        attempts: { type: integer }
+        nextAttemptAt: { type: [string, "null"], format: date-time }
+        lastStatusCode: { type: [integer, "null"] }
+        lastError: { type: [string, "null"] }
+        createdAt: { type: string, format: date-time }
+        deliveredAt: { type: [string, "null"], format: date-time }
+
+    ApiKey:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        prefix: { type: string, example: tck_live_Ab1 }
+        scopes: { type: array, items: { type: string } }
+        createdAt: { type: string, format: date-time }
+        createdByUserId: { type: [integer, "null"] }
+        lastUsedAt: { type: [string, "null"], format: date-time }
+        revokedAt: { type: [string, "null"], format: date-time }
+
+    WebhookEndpoint:
+      type: object
+      properties:
+        id: { type: integer }
+        url: { type: string, format: uri }
+        description: { type: [string, "null"] }
+        events: { type: array, items: { type: string } }
+        enabled: { type: boolean }
+        disabledReason: { type: [string, "null"] }
+        createdAt: { type: string, format: date-time }
+        lastSuccessAt: { type: [string, "null"], format: date-time }
+        lastError: { type: [string, "null"] }
+        lastErrorAt: { type: [string, "null"], format: date-time }
+        consecutiveFailures: { type: integer }
