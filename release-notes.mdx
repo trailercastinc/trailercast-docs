@@ -10,6 +10,18 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-09-07" description="Private recordings stay private, and Preview stops pretending to send">
+
+### Fixed
+
+- **"Mark private" is visible to the Global Admin again — and so is the rest of the Global Admin's toolkit.** The ⋮ menu on a call was documented as offering **Mark private** to the Global Admin, and the Security & Permissions page as offering **Transfer Global Admin** and per-person permission editing. For a while none of it appeared, for anyone — including the actual Global Admin, who was instead shown the "you are not the Global Admin" state on a page that should have been theirs. A single wrong lookup in the app was reading the role from the wrong place, so every Global-Admin-only control quietly decided you weren't one. Nothing was ever exposed to the wrong person; the controls simply couldn't be reached. They're back where the docs say they are: **Calls → ⋮ → Mark private / Mark public**, and the Global Admin's actions on **Settings → Security & Permissions**. If your account holds the Global Admin seat and you still can't see them, sign out and back in once.
+
+- **Team Reports no longer include other people's private recordings.** A recording the Global Admin marked private was correctly hidden from the Calls list, search, and the dashboard — but Reports in Team scope were still counting it. Its title, prospect name, creator, and engagement numbers could surface in Top demos, the Activity feed, a teammate's By-user totals, and the Impact report and its PDF. Team Reports now apply the same rule as everywhere else: a private recording is visible only to its owner and the Global Admin, so a private call stays private in every place a number is added up. The [Reports](/reports) page describes the rule.
+
+- **"Preview as prospect" is read-only now.** Previewing a Decision Room opened it with every message and comment box live, exactly as a stakeholder sees it, with only a "Viewing as Preview" pill for a hint — and "Preview" was simply the name on your own preview link. So a note typed there to follow up with someone was saved on *that* link: attributed to a prospect called "Preview", delivered to nobody, and then shown back in your Conversations as if a prospect had written it. The room's conversation box, document comments, proposal questions, and action-item comments are now disabled in a preview, with a note explaining why, and the pill reads **"Preview — nothing here is recorded or sent"**. Anything already written this way has been removed from your inbox. If you remember a message "from Preview": that was your own note, and it never reached anyone. To reach a stakeholder, share the room with them — **Share Decision Room** or **Copy share link** — the preview is only for checking how it looks.
+
+</Update>
+
 <Update label="Week of 2026-08-31" description="Trailers splits into Deal and Reusable">
 
 ### New
