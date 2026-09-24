@@ -10,6 +10,14 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-09-21" description="New releases show up without a hard refresh">
+
+### Fixed
+
+- **A tab left open across a release now catches up on its own.** If your browser restored TrailerCast from a previous session, or you kept the tab open for days, it could carry on running the version it first loaded, so a feature we shipped in the meantime simply wasn't there until you hard-refreshed. The app now checks for a newer version when it opens and when you sign in, and reloads itself once if there is one, at moments when you have nothing in progress to lose. If it notices a newer version while you're mid-session, it shows **A newer version of TrailerCast is available** with a **Reload now** button instead of interrupting you. A normal page reload always works too.
+
+</Update>
+
 <Update label="Week of 2026-09-14" description="Plans are now arranged with the team">
 
 ### Changed
@@ -27,6 +35,8 @@ If you spot something that's not working as described here, or you want a featur
 - **Message a stakeholder from the Decision Room.** Until now a room conversation could only be started by the prospect — you could reply, but there was nowhere to write *first*, so following up with one person meant leaving the room. On the room's **People** tab, every buyer-side person with an email now has **Message**, and the **Conversations** section has **+ New message** with a To: picker of the same people. Your message goes into that person's own private thread, and they get an email with it and a link to their Decision Room, where they can reply in place. If they don't have a link yet, one is created for them — the same tracked link **Share Decision Room** sends, so their views and replies land on their record. Two things follow from it. **Your replies in the room now email the prospect** a link back into the thread; before this, a reply typed in Conversations reached them only if they happened to reopen their link. And in Conversations each message has a delete and each thread has **Delete thread**, so a stray message or a whole conversation can be removed — it disappears for the prospect too, and both ask you to confirm. If the email can't be sent (the address is on the unsubscribe list, say), the message is still saved in the room and you're told the email didn't go. On for every workspace; if **Message** or **+ New message** doesn't appear, a hard refresh picks it up.
 
 ### Fixed
+
+- **Ask Winter finds a call by who was on it.** "When was my call with Paul?" used to get "No results for 'paul' in your demos", and then a claim that Winter couldn't search meetings — while Paul was sitting right there in the meeting's participant list. Winter's lookup only ever read a recording's title and prospect name, and even the transcript search dropped a call when the name appeared only as a speaker, never in what was said. Now one search covers demos, qualifying calls, and meetings together and matches the title, the prospect, and every person on the call: meeting-platform participants, calendar invitees, speaker names, and the follow-up attendee list. A first name is enough, words can be in any order, and if nothing matches Winter runs the transcript search itself before answering, then tells you exactly what it looked through rather than asking you for a filename. When several calls fit, it lists them with kind and date and lets you pick. Private recordings stay visible only to their owner, as everywhere else.
 
 - **"Mark private" is visible to the Global Admin again — and so is the rest of the Global Admin's toolkit.** The ⋮ menu on a call was documented as offering **Mark private** to the Global Admin, and the Security & Permissions page as offering **Transfer Global Admin** and per-person permission editing. For a while none of it appeared, for anyone — including the actual Global Admin, who was instead shown the "you are not the Global Admin" state on a page that should have been theirs. A single wrong lookup in the app was reading the role from the wrong place, so every Global-Admin-only control quietly decided you weren't one. Nothing was ever exposed to the wrong person; the controls simply couldn't be reached. They're back where the docs say they are: **Calls → ⋮ → Mark private / Mark public**, and the Global Admin's actions on **Settings → Security & Permissions**. If your account holds the Global Admin seat and you still can't see them, sign out and back in once.
 
