@@ -10,7 +10,11 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
-<Update label="Week of 2026-09-21" description="New releases show up without a hard refresh">
+<Update label="Week of 2026-09-21" description="One notetaker per meeting; new releases show up without a hard refresh">
+
+### Changed
+
+- **One notetaker per meeting, even when several of you are invited.** If two or three people from your workspace were on the same customer call with auto-scheduling on, each of their calendars scheduled its own notetaker, so two or three bots asked to join the meeting (and often one of them failed at the door). Now, when the organizer is a teammate who auto-records, their notetaker is the only one that joins and the recording lands on their account; if the organizer can't auto-record, the first eligible teammate's notetaker takes it instead. Teammates won't see that meeting under their own **Calls → Upcoming**, which is expected: the organizer has the recording, and admins can reach it through the team library. Hitting **Don't record** on a meeting now excludes it for everyone in the workspace, not just you.
 
 ### Fixed
 
