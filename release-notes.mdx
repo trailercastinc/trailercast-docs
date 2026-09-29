@@ -10,6 +10,21 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-09-28" description="Closed deals leave the dashboard; a buyer who comes back after a loss gets called out">
+
+### Fixed
+
+- **A deal you marked Lost no longer shows up as your hottest deal.** If you closed a Decision Room as Won or Lost, the Overview could keep naming its buyer under **Hottest right now**, counting them in **Buyers active this week**, and holding their thread in **Waiting on you** for as long as the seven-day windows lasted. That happened whenever the trailer had been shared from the Trailers screen rather than from inside the room. One rule now applies across the Overview, Deal cycle's **Hot this week** and the Team tab's waiting-on-you column: a deal marked Won or Lost drops off every "act now" surface. Your history is untouched; the Engagement funnel, the Buyer activity feed and Top performing still count what happened.
+- **The Impact tab now counts Decision Room outcomes.** Marking a room Won or Lost shows up in Impact's won / lost counts and win rate from the close date. Before, only trailers marked by hand or by CRM counted, so a room you had just closed left the tab saying no outcomes were tracked.
+- **"Trailers recorded but never shared" counts trailers only.** The footer line under Needs attention was counting every full call recording (meetings and qualifying calls) as an unshared trailer, so it could read "28 trailers never shared" when seven of them were trailers. Call recordings are kept, not sent, and no longer count. Trailers for deals already marked Won or Lost are left out too.
+- **Going cold and Pipeline health see trailer watches.** A room whose trailer was watched yesterday could read as "going cold", and Pipeline health could score it with zero watch time, because only visits to the room itself were being counted. Trailer views now count as room activity in both places.
+
+### New
+
+- **When a lost deal comes back, you hear about it.** If a buyer opens a trailer, visits the room, downloads a document or messages you after you marked the room Lost, that is the one closed-deal signal worth your attention. **Needs attention** shows "KwattWorks came back after you marked it lost" with a **Take a look** action that opens the room's engagement view, and if they keep watching, **Hottest right now** says "marked lost 2d ago, still watching" rather than pretending the deal is open. Set the room's outcome back to Open to put it back in your pipeline. Won rooms never resurface this way: a customer watching is success, not pipeline.
+
+</Update>
+
 <Update label="Week of 2026-09-21" description="One notetaker per meeting; new releases show up without a hard refresh">
 
 ### New
