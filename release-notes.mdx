@@ -10,6 +10,19 @@ If you spot something that's not working as described here, or you want a featur
 
 ---
 
+<Update label="Week of 2026-11-16" description="Whoever creates a workspace is its Global Admin from the start; invite someone straight in as Admin">
+
+### Fixed
+
+- **The person who creates a workspace is its Global Admin straight away.** A workspace created between two platform updates could leave its creator as a regular Admin until the next update, with no Global Admin at all in the meantime. That meant nobody could lock a permission, mark a recording private, or transfer the role. The creator is now Global Admin from the moment signup finishes, and every existing workspace has one.
+- **Only an admin can invite another admin.** A Member who had been given the invite permission could, through the API, send an invite at the Admin level. Members with that permission can now invite Members only.
+
+### New
+
+- **Invite a teammate as Admin in one step.** The invite form on **Security & Permissions** sent every invite as a Member, so making a second admin meant inviting, waiting for them to accept, then clicking **Promote**. A **Role** dropdown beside the email field now lets an admin choose Member or Admin up front, and the pending invite shows which it is. Member stays the default. *Rolling out workspace by workspace; if you don't see the dropdown yet, invite then promote.*
+
+</Update>
+
 <Update label="Week of 2026-09-28" description="Closed deals leave the dashboard; a buyer who comes back after a loss gets called out">
 
 ### Fixed
