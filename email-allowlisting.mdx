@@ -43,9 +43,17 @@ Any of the following, in order of preference:
 
 In the Admin console: **Apps → Google Workspace → Gmail → Spam, phishing and malware**, add `trailercast.io` to the **approved senders** list on your spam policy, or create an inbound gateway/allowlist entry for mail passing DMARC for `trailercast.io`.
 
+## Allowing our links in Defender Safe Links
+
+If your tenant rewrites or blocks links, add `app.trailercast.io/*` to **Do not rewrite the following URLs** in your Safe Links policy (Microsoft 365 Defender: **Policies & rules → Threat policies → Safe Links**), or allow the URL in the **Tenant Allow/Block List**. Older messages may link to `trailercast.cloud`, which redirects to the same place.
+
 ## A note on link scanning
 
-TrailerCast links are safe to scan. Defender Safe Links and similar products can fetch and detonate our URLs freely: share links are not single-use, nothing is consumed by an automated visit, and no credential entry is requested at any link destination — a recipient is never asked for a password to view what was shared with them.
+TrailerCast links are safe to scan. Defender Safe Links and similar products can fetch and detonate our URLs freely:
+
+- **Share links are not single-use.** Opening a Decision Room or trailer link any number of times changes nothing, and a visit is only counted as a view after a real person interacts with the page.
+- **Opening a link never performs an action.** The unsubscribe link, the team invitation link and the email verification link each open a page with a button; nothing happens until a person presses it. (Before 27 November 2026 the unsubscribe link acted as soon as it was opened, which let a scanner unsubscribe a recipient. If someone at your company stopped receiving TrailerCast email from a vendor, ask the vendor to restore the address under Settings → Email Delivery in their TrailerCast workspace.)
+- **No credentials are requested** to view what was shared. A recipient is never asked for a password to open a Decision Room or a trailer.
 
 ## Questions
 
