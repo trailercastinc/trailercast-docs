@@ -14,6 +14,8 @@ If you spot something that's not working as described here, or you want a featur
 
 ### New
 
+- **Resend or copy a team invite.** Under **Security & Permissions → Pending invites**, each invite has **Resend** and **Copy link**, plus what happened to the email: sent, accepted by their mail server, delayed or bounced. If a company mail filter holds the invitation, copy the link and send it in Teams, Slack or your own email. The link from the original email keeps working. *Rolling out workspace by workspace; if you don't see the buttons, they aren't on for your workspace yet.*
+
 - **Highlight, draw and comment on a document, together.** Reviewing a scope of work or a contract used to mean describing "the second paragraph on page 4" in a comment. Now the document viewer in a Decision Room has a markup toolbar: **Highlight** a passage, **Draw** on the page, or pin a **Comment** to an exact spot. Each person gets their own colour, every mark is listed beside the pages where it can be replied to and resolved, and both sides see the same markup. Open it from **Review** on a document's card; buyers get the toolbar on the document page. Markup is shared with everyone who can open the document, unlike the private comment thread next to it. *Rolling out workspace by workspace; if there's no toolbar above the pages, it isn't on for your workspace yet.*
 - **Choose who can see each document.** A contract for legal, pricing for the economic buyer: **Access** on a document's card limits it to the buyer contacts you tick. Everyone else in the room doesn't see it, including through a link they already had. *Rolling out workspace by workspace.*
 
@@ -29,6 +31,11 @@ If you spot something that's not working as described here, or you want a featur
 <Update label="Week of 2026-11-16" description="Whoever creates a workspace is its Global Admin from the start; invite someone straight in as Admin; buyers see the summary and transcript of a call in a room">
 
 ### Fixed
+
+- **Emails to Microsoft 365 recipients no longer unsubscribe themselves.** Company mail scanners open every link in an email before the person sees it. Our unsubscribe link acted the moment it was opened, so a scanner could unsubscribe a buyer from you on delivery, and your later emails to them were skipped. The link now opens a page with a **Confirm unsubscribe** button and nothing happens until a person presses it. The one-click Unsubscribe button in Gmail and Outlook works as before. If a share was refused with "Recipient is on the unsubscribe list" for someone who never unsubscribed, an admin can remove them under **Settings → Email Delivery**.
+- **Email verification links can't be used up by a scanner.** The link now opens a **Verify email** button, and opening it twice says "already verified" instead of "invalid link".
+- **Team invitations look like they come from a person.** The invitation shows the inviter's name, replies go to the inviter, and the full link is printed in the email, which helps it through company mail filters.
+- **Replying to a trailer email reaches the seller.** Replies used to go to a TrailerCast address.
 
 - **The person who creates a workspace is its Global Admin straight away.** A workspace created between two platform updates could leave its creator as a regular Admin until the next update, with no Global Admin at all in the meantime. That meant nobody could lock a permission, mark a recording private, or transfer the role. The creator is now Global Admin from the moment signup finishes, and every existing workspace has one.
 - **Only an admin can invite another admin.** A Member who had been given the invite permission could, through the API, send an invite at the Admin level. Members with that permission can now invite Members only.
